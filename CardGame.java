@@ -3,8 +3,8 @@ public class CardGame {
         Deck deck1 = new Deck();
         Deck deck2 = new Deck();
         
-        Player player1 = new Player(1, deck1, deck2);
-        Player player2 = new Player(2, deck2, deck1);
+        Player player1 = new Player (deck1, deck2);
+        Player player2 = new Player( deck2, deck1);
 
         Thread playerThread1 = new Thread(player1);
         Thread playerThread2 = new Thread(player2);

@@ -1,16 +1,17 @@
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 
 
 public class Player implements Runnable {
+    private static int idCounter = 0;
     private final int id;
     private final Deck leftDeck;
     private final Deck rightDeck;
     private final Hand hand = new Hand();
 
-    public Player(int id, Deck leftDeck, Deck rightDeck) {
-        this.id = id;
+    public Player(Deck leftDeck, Deck rightDeck) {
+        this.id = idCounter++;
         this.leftDeck = leftDeck;
         this.rightDeck = rightDeck;
     }
