@@ -1,0 +1,56 @@
+import java.util.List;
+import java.util.ArrayList;
+
+
+
+public class Player implements Runnable {
+    private final int id;
+    private final Deck leftDeck;
+    private final Deck rightDeck;
+    private final Hand hand = new Hand();
+
+    public Player(int id, Deck leftDeck, Deck rightDeck) {
+        this.id = id;
+        this.leftDeck = leftDeck;
+        this.rightDeck = rightDeck;
+    }
+
+    @Override
+    public void run() {
+        // Game logic for the player, e.g., drawing and discarding cards
+        while (!hand.isWinningHand()) {
+            drawCard();
+            discardCard();
+            // Additional game logic here
+        }
+        System.out.println("Player " + id + " has won!");
+    }
+
+    private void drawCard() {
+        Card card = leftDeck.drawCard();
+        hand.addCard(card);
+    }
+
+    private void discardCard() {
+        Card cardToDiscard = hand.discardCard();
+        rightDeck.addCard(cardToDiscard);
+    }
+
+    private class Hand {
+        private List<Card> cards = new ArrayList<>();
+
+        public void addCard(Card card) {
+            cards.add(card);
+        }
+
+        public Card discardCard() {
+            // Implement discard logic, e.g., selecting a card to discard
+            return cards.remove(0); // Example of discarding the first card
+        }
+
+        public boolean isWinningHand() {
+            // Logic to check if the hand is winning
+            return false; // Placeholder for actual winning condition
+        }
+    }
+}
