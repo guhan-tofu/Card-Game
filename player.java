@@ -16,6 +16,14 @@ public class Player implements Runnable {
         this.rightDeck = rightDeck;
     }
 
+    public Deck getLeftDeck(){
+        return this.leftDeck;
+    }
+
+    public Deck getRightDeck(){
+        return this.rightDeck;
+    }
+
     @Override
     public void run() {
         // Game logic for the player, e.g., drawing and discarding cards
@@ -24,7 +32,7 @@ public class Player implements Runnable {
             discardCard();
             // Additional game logic here
         }
-        System.out.println("Player " + id + " has won!");
+        System.out.println("Player " + (id+1) + " has won!");
     }
 
     private void drawCard() {
@@ -40,7 +48,7 @@ public class Player implements Runnable {
     private class Hand {
         private List<Card> cards = new ArrayList<>();
 
-        public void addCard(Card card) {
+        public void addCard(Card card) {//id of card instead
             cards.add(card);
         }
 
