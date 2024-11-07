@@ -19,6 +19,7 @@ public class CardImplementor {
             Deck rightDeck = decks.get((i + 1) % nPlayer);
             myPlayers.add(new Player(leftDeck, rightDeck));
         }
+    }
 
     public String showPlayerDetails(int playerId){
         Player player = myPlayers.get(playerId);
