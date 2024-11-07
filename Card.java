@@ -16,4 +16,8 @@ public class Card{
     public int getId() {
         return id;
     }
+
+    public String toString() {
+        return String.valueOf(value);
+    }
 }
