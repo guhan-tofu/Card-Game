@@ -1,8 +1,8 @@
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class Deck {
-    private int id;
-    private static int idCounter =0;
+    // private int id;
+    // private static int idCounter =0;
     private ConcurrentLinkedQueue<Card> cards = new ConcurrentLinkedQueue<>();
 
     public synchronized void addCard(Card card) {
