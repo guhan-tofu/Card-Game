@@ -36,8 +36,8 @@ public class Player implements Runnable {
     }
 
     private void drawCard() {
-        Card card = leftDeck.drawCard();
-        hand.addCard(card);
+        Card cardToDraw = leftDeck.drawCard();
+        hand.addCard(cardToDraw);
     }
 
     private void discardCard() {
