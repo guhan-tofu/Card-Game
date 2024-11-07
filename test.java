@@ -16,7 +16,19 @@ public class test {
         impl.loadCardsFromFile("Pack.txt");
         impl.showCardValues();
 
-        //first set up the playing ground
+
+        impl.distributeToPlayers(4);
+        impl.distributeToDecks(4);
+
+
+
+        System.out.println("Cards in player 0");
+        impl.showCardsInHand(0);
+        System.out.println("Cards in deck 0");
+        impl.showCardsInDeck(0);
+        
+
+       
         //then initialise the running of player threads
         //events and listeners 
         //generate 2n .txt files for players and decks

@@ -16,4 +16,10 @@ public class Deck {
     public synchronized int getSize() {
         return cards.size();
     }
+
+    public synchronized void showCards(){
+        for (Card card : cards){
+            System.out.println("card id: " +card.getId()+ " card value: " + card.getValue());
+        }
+    }
 }

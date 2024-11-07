@@ -64,7 +64,7 @@ public class CardImplementor {
         } catch (IOException e) {
             System.out.println("Error reading file: " + e.getMessage());
         } catch (NumberFormatException e) {
-            System.out.println("Invalid number format in file: " + e.getMessage());
+            System.out.println("Invalid number format in file: " + e.getMessage()); // add exceptions for when nPlayers is not 8n cards 
         }
     }
 
@@ -77,12 +77,32 @@ public class CardImplementor {
 
 
 
-    // public void distributeToPlayers(){
-        // logic here
-    // }
+    public void distributeToPlayers(int nPlayer){
+        for (int i = 0; i < (4*nPlayer); i++){
+            Card card = myCards.get(i);
+            Player player = myPlayers.get(i%nPlayer);
+            player.addCardToHand(card);
+        }
+        }
+   
 
+    public void distributeToDecks(int nPlayer){
+        for (int i = 4*nPlayer; i < (8*nPlayer); i++){
+            Card card = myCards.get(i);
+            Deck deck = myDecks.get(i%nPlayer);
+            deck.addCard(card);
+        }
+        }
 
-    //public void distributeToDecks(){
-        // logic here
-    // }
+    public void showCardsInDeck(int deckId){
+        Deck deck = myDecks.get(deckId);
+        deck.showCards();
+    }
+
+    public void showCardsInHand(int playerId){
+        Player player = myPlayers.get(playerId);
+        player.showCardsInHand();
+    }
+       
+
 }

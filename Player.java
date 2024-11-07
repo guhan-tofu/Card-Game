@@ -45,6 +45,16 @@ public class Player implements Runnable {
         rightDeck.addCard(cardToDiscard);
     }
 
+    public void addCardToHand(Card card){
+        hand.addCard(card);
+    }
+
+    public void showCardsInHand() {
+        hand.showCardsInHand(); // Delegate to Hand's method
+    }
+
+
+
     private class Hand {
         private List<Card> cards = new ArrayList<>();
 
@@ -60,6 +70,12 @@ public class Player implements Runnable {
         public boolean isWinningHand() {
             // Logic to check if the hand is winning
             return false; // Placeholder for actual winning condition
+        }
+
+        public void showCardsInHand(){
+            for (Card card : cards){
+                System.out.println("card id: " +card.getId()+ " card value: " + card.getValue());
+            }
         }
     }
 }
