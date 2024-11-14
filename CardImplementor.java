@@ -7,7 +7,7 @@ public class CardImplementor {
     private ArrayList<Deck> myDecks = new ArrayList<>();
     private ArrayList<Player> myPlayers = new ArrayList<>();
     private ArrayList<Card> myCards = new ArrayList<>();
-    
+    private ArrayList<PlayerMoveEventListener> PlayerListeners = new ArrayList<>(); // Keep array of our threads that listen to PlayerMove
 
     public void createPlayers(int nPlayer) {
 
@@ -110,6 +110,20 @@ public class CardImplementor {
         player.discardCard();
         
     }
+
+    private void notifyplayerMoveWriteEventListeners(PlayerMoveEvent evt) throws IOException{ // responsible for notifying every thread in the List that the event occured  
+        for (PlayerMoveEventListener l : PlayerListeners)
+            l.eventOccured(evt);
+    }
+
+    public void platyerMoveEventListener(PlayerMoveEventListener listener) {  // adding playermove event listener threads into the list (only allows threads that implement the respective listener)
+        this.PlayerListeners.add(listener);
+    }
+
+
+
+
+
        
 
 }
