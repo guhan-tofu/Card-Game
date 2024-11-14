@@ -103,6 +103,13 @@ public class CardImplementor {
         Player player = myPlayers.get(playerId);
         player.showCardsInHand();
     }
+
+    public void playerMove(int playerId){
+        Player player = myPlayers.get(playerId);
+        player.drawCard();
+        player.discardCard();
+        
+    }
        
 
 }

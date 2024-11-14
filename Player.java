@@ -1,5 +1,7 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 
@@ -35,12 +37,12 @@ public class Player implements Runnable {
         System.out.println("Player " + (id+1) + " has won!");
     }
 
-    private void drawCard() {
+    public void drawCard() {
         Card cardToDraw = leftDeck.drawCard();
         hand.addCard(cardToDraw);
     }
 
-    private void discardCard() {
+    public void discardCard() {
         Card cardToDiscard = hand.discardCard();
         rightDeck.addCard(cardToDiscard);
     }
@@ -62,9 +64,43 @@ public class Player implements Runnable {
             cards.add(card);
         }
 
+        // public Card discardCard() {
+        //     // Implement discard logic, e.g., selecting a card to discard
+        //     return cards.remove(0); // Example of discarding the first card
+        // }
+
         public Card discardCard() {
-            // Implement discard logic, e.g., selecting a card to discard
-            return cards.remove(0); // Example of discarding the first card
+            if (cards.isEmpty()) {
+                throw new IllegalStateException("No cards to discard.");
+            }
+
+            // Step 1: Count occurrences of card values
+            Map<Integer, Integer> valueCount = new HashMap<>();
+            for (Card card : cards) {
+                int value = card.getValue();
+                valueCount.put(value, valueCount.getOrDefault(value, 0) + 1);
+            }
+
+            // Step 2: Find the least occurring card value
+            int leastOccurringValue = -1;
+            int minCount = Integer.MAX_VALUE;
+
+            for (Map.Entry<Integer, Integer> entry : valueCount.entrySet()) {
+                if (entry.getValue() < minCount) {
+                    minCount = entry.getValue();
+                    leastOccurringValue = entry.getKey();
+                }
+            }
+
+            // Step 3: Remove a card with the least occurring value
+            for (int i = 0; i < cards.size(); i++) {
+                if (cards.get(i).getValue() == leastOccurringValue) {
+                    return cards.remove(i);
+                }
+            }
+
+            // Fallback: Remove the first card if all values are unique
+            return cards.remove(0);
         }
 
         public boolean isWinningHand() {

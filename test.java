@@ -6,15 +6,15 @@ public class test {
         CardImplementor impl = new CardImplementor();
 
         impl.createPlayers(4);
-        System.out.println(impl.showPlayerDetails(0));
-        System.out.println(impl.showPlayerDetails(1));
-        System.out.println(impl.showPlayerDetails(2));
-        System.out.println(impl.showPlayerDetails(3));
+        // System.out.println(impl.showPlayerDetails(0));
+        // System.out.println(impl.showPlayerDetails(1));
+        // System.out.println(impl.showPlayerDetails(2));
+        // System.out.println(impl.showPlayerDetails(3));
 
         
         
         impl.loadCardsFromFile("Pack.txt");
-        impl.showCardValues();
+        // impl.showCardValues();
 
 
         impl.distributeToPlayers(4);
@@ -26,7 +26,19 @@ public class test {
         impl.showCardsInHand(0);
         System.out.println("Cards in deck 0");
         impl.showCardsInDeck(0);
+        System.out.println("Cards in deck 3");
+        impl.showCardsInDeck(3);
         
+        impl.playerMove(0);
+        impl.playerMove(1);
+        impl.playerMove(2);
+        impl.playerMove(3);
+        System.out.println("Cards in player 0");
+        impl.showCardsInHand(0);
+        System.out.println("Cards in deck 0");
+        impl.showCardsInDeck(0);
+        System.out.println("Cards in deck 3");
+        impl.showCardsInDeck(3);
 
        
         //then initialise the running of player threads
