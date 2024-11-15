@@ -19,7 +19,8 @@ public class Deck {
 
     public synchronized void showCards(){
         for (Card card : cards){
-            System.out.println("card id: " +card.getId()+ " card value: " + card.getValue());
-        }
+            if (card != null) {
+                System.out.println("card id: " +card.getId()+ " card value: " + card.getValue());
+        }}
     }
 }

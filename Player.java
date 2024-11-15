@@ -147,8 +147,9 @@ public class Player implements Runnable {
 
         public void showCardsInHand(){
             for (Card card : cards){
-                System.out.println("card id: " +card.getId()+ " card value: " + card.getValue());
-            }
+                if (card != null) {
+                    System.out.println("card id: " +card.getId()+ " card value: " + card.getValue());
+            }}
         }
     }
 }

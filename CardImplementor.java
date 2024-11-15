@@ -112,17 +112,32 @@ public class CardImplementor {
     }
 
     public void startPlayers() {
+        List<Thread> playerThreads = new ArrayList<>();
+    
+        // Start all player threads
         for (Player player : myPlayers) {
             Thread playerThread = new Thread(player); // Wrap each Player in a Thread
+            playerThreads.add(playerThread);
             playerThread.start(); // Start the Thread
-
+        }
+    
+        // Sleep for a brief moment to allow all threads to start simultaneously
+        try {
+            Thread.sleep(100); // 100 milliseconds or any brief delay
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    
+        // Join all player threads to wait for their completion
+        for (Thread playerThread : playerThreads) {
             try {
-                playerThread.join();
+                playerThread.join(); // Wait for each thread to finish
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
     }
+    
 
     private void notifyplayerMoveWriteEventListeners(PlayerMoveEvent evt) throws IOException{ // responsible for notifying every thread in the List that the event occured  
         for (PlayerMoveEventListener l : PlayerListeners)
