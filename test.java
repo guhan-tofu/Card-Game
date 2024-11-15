@@ -57,6 +57,17 @@ public class test {
         //events and listeners 
         //generate 2n .txt files for players and decks
 
+
+
+        System.out.println("Cards in deck 1");
+        impl.showCardsInDeck(0);
+        System.out.println("Cards in deck 2");
+        impl.showCardsInDeck(1);
+        System.out.println("Cards in deck 3");
+        impl.showCardsInDeck(2);
+        System.out.println("Cards in deck 4");
+        impl.showCardsInDeck(3);
+
         
 
     }
