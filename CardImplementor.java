@@ -111,6 +111,19 @@ public class CardImplementor {
         
     }
 
+    public void startPlayers() {
+        for (Player player : myPlayers) {
+            Thread playerThread = new Thread(player); // Wrap each Player in a Thread
+            playerThread.start(); // Start the Thread
+
+            try {
+                playerThread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     private void notifyplayerMoveWriteEventListeners(PlayerMoveEvent evt) throws IOException{ // responsible for notifying every thread in the List that the event occured  
         for (PlayerMoveEventListener l : PlayerListeners)
             l.eventOccured(evt);

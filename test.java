@@ -22,25 +22,37 @@ public class test {
 
 
 
-        System.out.println("Cards in player 0");
-        impl.showCardsInHand(0);
-        System.out.println("Cards in deck 0");
-        impl.showCardsInDeck(0);
-        System.out.println("Cards in deck 3");
-        impl.showCardsInDeck(3);
+        // System.out.println("Cards in player 0");
+        // impl.showCardsInHand(0);
+        // System.out.println("Cards in deck 0");
+        // impl.showCardsInDeck(0);
+        // System.out.println("Cards in deck 3");
+        // impl.showCardsInDeck(3);
         
-        impl.playerMove(0);
-        impl.playerMove(1);
-        impl.playerMove(2);
-        impl.playerMove(3);
-        System.out.println("Cards in player 0");
-        impl.showCardsInHand(0);
-        System.out.println("Cards in deck 0");
-        impl.showCardsInDeck(0);
-        System.out.println("Cards in deck 3");
-        impl.showCardsInDeck(3);
+        // impl.playerMove(0);
+        // impl.playerMove(1);
+        // impl.playerMove(2);
+        // impl.playerMove(3);
+        // System.out.println("Cards in player 0");
+        // impl.showCardsInHand(0);
+        // System.out.println("Cards in deck 0");
+        // impl.showCardsInDeck(0);
+        // System.out.println("Cards in deck 3");
+        // impl.showCardsInDeck(3);
 
-       
+        
+
+        impl.startPlayers();
+
+        
+        System.out.println("Cards in player 1");
+        impl.showCardsInHand(0);
+        System.out.println("Cards in player 2");
+        impl.showCardsInHand(1);
+        System.out.println("Cards in player 3");
+        impl.showCardsInHand(2);
+        System.out.println("Cards in player 4");
+        impl.showCardsInHand(3);
         //then initialise the running of player threads
         //events and listeners 
         //generate 2n .txt files for players and decks
