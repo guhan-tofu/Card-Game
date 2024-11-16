@@ -5,12 +5,13 @@ import java.util.Map;
 
 
 
-public class Player implements Runnable {
+public class Player extends Thread {
     private static int idCounter = 0;
     private final int id;
     private final Deck leftDeck;
     private final Deck rightDeck;
     private final Hand hand = new Hand();
+    private static volatile boolean gameOver = false;
 
     public Player(Deck leftDeck, Deck rightDeck) {
         this.id = idCounter++;
@@ -18,40 +19,61 @@ public class Player implements Runnable {
         this.rightDeck = rightDeck;
     }
 
-    public Deck getLeftDeck(){
+    public synchronized Deck getLeftDeck(){
         return this.leftDeck;
     }
 
-    public Deck getRightDeck(){
+    public synchronized Deck getRightDeck(){
         return this.rightDeck;
     }
 
+    
     @Override
     public void run() {
         // Game logic for the player, e.g., drawing and discarding cards
-        while (!hand.isWinningHand()) {
-            drawCard();
-            discardCard();
+        while (!hand.isWinningHand() && !gameOver) {
+            // while(leftDeck.getSize() ==4){
+            
+            //     doBoth();
+            // }
+            doBoth();
+            
             // Additional game logic here
         }
-        System.out.println("Player " + (id+1) + " has won!");
+
+        if (hand.isWinningHand()) {
+            synchronized (Player.class) {  // Ensure that only one thread can set gameOver
+                if (!gameOver) {  // If the game is not already over, set it to true
+                    gameOver = true;
+                    System.out.println("Player " + (id + 1) + " has won!");
+                      // Set gameOver to true to stop other threads
+                }
+            }
+        }
     }
 
-    public void drawCard() {
+    public synchronized void doBoth(){
         Card cardToDraw = leftDeck.drawCard();
         hand.addCard(cardToDraw);
-    }
-
-    public void discardCard() {
         Card cardToDiscard = hand.discardCard();
         rightDeck.addCard(cardToDiscard);
     }
 
-    public void addCardToHand(Card card){
+    public synchronized void drawCard() {
+        Card cardToDraw = leftDeck.drawCard();
+        hand.addCard(cardToDraw);
+    }
+
+    public synchronized void discardCard() {
+        Card cardToDiscard = hand.discardCard();
+        rightDeck.addCard(cardToDiscard);
+    }
+
+    public synchronized void addCardToHand(Card card){
         hand.addCard(card);
     }
 
-    public void showCardsInHand() {
+    public synchronized void showCardsInHand() {
         hand.showCardsInHand(); // Delegate to Hand's method
     }
 
@@ -60,14 +82,9 @@ public class Player implements Runnable {
     private class Hand {
         private List<Card> cards = new ArrayList<>();
 
-        public void addCard(Card card) {//id of card instead
+        public synchronized void addCard(Card card) {//id of card instead
             cards.add(card);
         }
-
-        // public Card discardCard() {
-        //     // Implement discard logic, e.g., selecting a card to discard
-        //     return cards.remove(0); // Example of discarding the first card
-        // }
 
         public synchronized Card discardCard() {
             if (cards.isEmpty()) {
@@ -119,33 +136,28 @@ public class Player implements Runnable {
                 return false; // A hand with no cards cannot be a winning hand
             }
         
-            Card firstCard = null;
-        
-            // Find the first non-null card
+            // Create a map to store the frequency of each card value
+            Map<Integer, Integer> valueCountMap = new HashMap<>();
+            
+            // Count the occurrences of each card value
             for (Card card : cards) {
                 if (card != null) {
-                    firstCard = card;
-                    break;
+                    int value = card.getValue();
+                    valueCountMap.put(value, valueCountMap.getOrDefault(value, 0) + 1);
                 }
             }
         
-            if (firstCard == null) {
-                return false; // If all cards are null, it's not a winning hand
-            }
-        
-            int firstValue = firstCard.getValue();
-        
-            // Check if all non-null cards have the same value
-            for (Card card : cards) {
-                if (card != null && card.getValue() != firstValue) {
-                    return false; // Not a winning hand if values differ
+            // Check if any value occurs exactly 4 times
+            for (int count : valueCountMap.values()) {
+                if (count == 4) {
+                    return true; // A winning hand if there are exactly 4 cards of the same value
                 }
             }
         
-            return true; // All non-null cards have the same value
+            return false; // No value occurs exactly 4 times
         }
 
-        public void showCardsInHand(){
+        public synchronized void showCardsInHand(){
             for (Card card : cards){
                 if (card != null) {
                     System.out.println("card id: " +card.getId()+ " card value: " + card.getValue());

@@ -1,0 +1,45 @@
+public class test2 {
+    public static void main(String[] args) {
+        CardImplementor impl = new CardImplementor();
+
+        impl.createPlayers(2);
+
+        impl.loadCardsFromFile("pack2.txt");
+        // impl.showCardValues();
+
+
+        impl.distributeToPlayers(2);
+        impl.distributeToDecks(2);
+        System.out.println(impl.showPlayerDetails(0));
+        System.out.println(impl.showPlayerDetails(1));
+
+        System.out.println("Cards in player 0 :");
+        impl.showCardsInHand(0);
+        System.out.println("Cards in deck 0 :");
+        impl.showCardsInDeck(0);
+
+        System.out.println("  ");
+
+        System.out.println("Cards in player 1 :");
+        impl.showCardsInHand(1);
+        System.out.println("Cards in deck 1 :");
+        impl.showCardsInDeck(1);
+        
+
+        for(PlayerMoveThread thrd : CardImplementor.myPlayers){
+            System.out.println(thrd.getLeftDeck());
+        }
+
+
+        for(PlayerMoveThread myThing : CardImplementor.myPlayers){
+            //ThreadThing myThing = new ThreadThing();
+            myThing.start();
+            // try{
+            //     myThing.join();
+            // }catch(InterruptedException e){
+            //     System.out.println(e);
+            // }
+        }
+
+    }
+}

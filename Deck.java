@@ -1,26 +1,25 @@
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class Deck {
-    // private int id;
-    // private static int idCounter =0;
     private ConcurrentLinkedQueue<Card> cards = new ConcurrentLinkedQueue<>();
 
-    public synchronized void addCard(Card card) {
-        cards.add(card);
+    public void addCard(Card card) {
+        cards.add(card);  // No need to synchronize
     }
 
-    public synchronized Card drawCard() {
-        return cards.poll();
+    public Card drawCard() {
+        return cards.poll();  // No need to synchronize
     }
 
-    public synchronized int getSize() {
-        return cards.size();
+    public int getSize() {
+        return cards.size();  // No need to synchronize
     }
 
-    public synchronized void showCards(){
-        for (Card card : cards){
+    public void showCards() {
+        for (Card card : cards) {
             if (card != null) {
-                System.out.println("card id: " +card.getId()+ " card value: " + card.getValue());
-        }}
+                System.out.println("card id: " + card.getId() + " card value: " + card.getValue());
+            }
+        }
     }
 }

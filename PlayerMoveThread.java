@@ -15,6 +15,7 @@ public class PlayerMoveThread extends BasicThread implements PlayerMoveEventList
         
     }
 
+
     @Override
     public void eventOccured(PlayerMoveEvent evt) throws IOException {
         // Write the event message to the player-specific file
@@ -26,6 +27,8 @@ public class PlayerMoveThread extends BasicThread implements PlayerMoveEventList
     private final Deck leftDeck;
     private final Deck rightDeck;
     private final Hand hand = new Hand();
+    private static volatile boolean gameOver = false;
+
 
 
     public Deck getLeftDeck(){
@@ -35,24 +38,68 @@ public class PlayerMoveThread extends BasicThread implements PlayerMoveEventList
     public Deck getRightDeck(){
         return this.rightDeck;
     }
+    CardImplementor imple = new CardImplementor();
 
     @Override
     public void run() {
-        // Game logic for the player, e.g., drawing and discarding cards
-        while (!hand.isWinningHand()) {
-            drawCard();
-            discardCard();
-            // Additional game logic here
+        while (!gameOver) { // Top-level check
+            if (hand.isWinningHand()) {
+                synchronized (PlayerMoveThread.class) {  // Ensure one thread declares victory
+                    if (!gameOver) {  // Double-check the flag to avoid race conditions
+                        gameOver = true;
+                        System.out.println("Player " + (id + 1) + " has won!");
+                        System.out.println(" ");
+                        imple.showCardsInHand(0);
+                        System.out.println(" ");
+                        imple.showCardsInHand(1);
+                      
+                        
+                    }
+                }
+                break; // Exit the loop after declaring the winner
+            }
+
+            if (leftDeck.getSize() != 3) {
+                try {
+                    Thread.sleep(10); // Delay for realism
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt(); // Restore interrupted status
+                    break; // Exit the loop if interrupted
+                }
+
+                // Exit if game is over to avoid unnecessary work
+                if (gameOver) {
+                    break;
+                }
+
+                doBoth(); // Perform card operations
+            }
         }
-        System.out.println("Player " + (id+1) + " has won!");
+        // Thread naturally exits here
     }
 
-    public void drawCard() {
+    public synchronized void doBoth(){
         Card cardToDraw = leftDeck.drawCard();
+        System.out.println("Card to Draw : "+cardToDraw);
         hand.addCard(cardToDraw);
+        Card cardToDiscard = hand.discardCard();
+        System.out.println("Card to Discard : "+ cardToDiscard);
+        rightDeck.addCard(cardToDiscard);
+
+
+        
     }
 
-    public void discardCard() {
+    public synchronized void drawCard() {
+        Card cardToDraw = leftDeck.drawCard();
+        if (cardToDraw != null) {
+            hand.addCard(cardToDraw);
+        } else {
+            throw new IllegalStateException("No cards left to draw.");
+        }
+    }
+
+    public synchronized void discardCard() {
         Card cardToDiscard = hand.discardCard();
         rightDeck.addCard(cardToDiscard);
     }
@@ -65,14 +112,20 @@ public class PlayerMoveThread extends BasicThread implements PlayerMoveEventList
         hand.showCardsInHand(); // Delegate to Hand's method
     }
 
+    public boolean isWinningHand(){
+        return hand.isWinningHand();
+    }
+
 
 
     private class Hand {
-        private List<Card> cards = new ArrayList<>();
+        private volatile List<Card> cards = new ArrayList<>();
 
         public void addCard(Card card) {//id of card instead
             cards.add(card);
         }
+
+    
 
         // public Card discardCard() {
         //     // Implement discard logic, e.g., selecting a card to discard

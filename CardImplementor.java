@@ -5,8 +5,9 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class CardImplementor extends Thread {//can be BasicThread
-    private static ArrayList<Deck> myDecks = new ArrayList<>();
-    private static ArrayList<PlayerMoveThread> myPlayers = new ArrayList<>();
+    
+    public static ArrayList<Deck> myDecks = new ArrayList<>();
+    public static ArrayList<PlayerMoveThread> myPlayers = new ArrayList<>();
     private ArrayList<Card> myCards = new ArrayList<>();
     private ArrayList<PlayerMoveEventListener> PlayerListeners = new ArrayList<>(); // Keep array of our threads that listen to PlayerMove
     private static volatile boolean gameInProgress = true;
@@ -16,6 +17,9 @@ public class CardImplementor extends Thread {//can be BasicThread
     // }
 
     public static void main(String[] args) throws IOException, InterruptedException {
+
+        myDecks.clear();
+        myPlayers.clear();
         // construct the threads
         CardImplementor ioProcessor = new CardImplementor();
         // create the decks
@@ -34,6 +38,18 @@ public class CardImplementor extends Thread {//can be BasicThread
         PlayerMoveThread player3Thread = new PlayerMoveThread(myDecks.get(1), myDecks.get(2));
         PlayerMoveThread player4Thread = new PlayerMoveThread(myDecks.get(2), myDecks.get(3));
 
+        myPlayers.add(player1Thread);
+        myPlayers.add(player2Thread);
+        myPlayers.add(player3Thread);
+        myPlayers.add(player4Thread);
+
+        ioProcessor.loadCardsFromFile("Pack.txt");
+        // impl.showCardValues();
+
+
+        ioProcessor.distributeToPlayers(4);
+        ioProcessor.distributeToDecks(4);
+
         // register listeners with the source
         ioProcessor.addplayerMoveEventListener(player1Thread); // fileThread being registered as a FileWrite Event listener
         ioProcessor.addplayerMoveEventListener(player2Thread);
@@ -47,10 +63,15 @@ public class CardImplementor extends Thread {//can be BasicThread
         player3Thread.start();
         player4Thread.start();
         Thread.sleep(1000); // allows threads to initialize fully
-        System.out.println("starting processor: please enter text, EXIT to exit");
+
         // start ioProcessor once all other threads are ready
         ioProcessor.start();
+        ioProcessor.showCardsInDeck(0);
+        ioProcessor.showCardsInDeck(1);
+        ioProcessor.showCardsInDeck(2);
+        ioProcessor.showCardsInDeck(3);
 
+      
     }
 
 
@@ -58,31 +79,50 @@ public class CardImplementor extends Thread {//can be BasicThread
     public void run() {
         while (gameInProgress) {
             try {
-                String text = console.readLine();
-                Calendar cal = Calendar.getInstance();
-                cal.getTime();
-                SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-                String time = sdf.format(cal.getTime());
-                if (text.equals("EXIT")) {
-                    System.exit(0);
-                } else {
-                    this.writeToFile(text);
-                    FileWriteEvent fileEvent = new FileWriteEvent(this, time + " file written to");  
-                    this.notifyFileWriteEventListeners(fileEvent);
-                    if ((text.toLowerCase().contains("university")) || (text.toLowerCase().contains("universities"))) {
-                        UniversityWriteEvent uniEvent = new UniversityWriteEvent(this, time + " university/ies in string: " + text);  
-                        this.notifyUniversityWriteEventListeners(uniEvent); 
-                    }
 
-                    if ((text.toLowerCase().contains("exeter")) || (text.toLowerCase().contains("south-west"))) {
-                        ExeterWriteEvent exeterEvent = new ExeterWriteEvent(this, time + " exeter/south-west in string: " + text);  
-                        this.notifyExeterWriteEventListeners(exeterEvent); 
-                    }
-                }   
-            } catch (IOException e) {
+                System.out.println("Game STARTING!");
+                this.showCardsInDeck(0);
+                this.showCardsInDeck(1);
+                this.showCardsInDeck(2);
+                this.showCardsInDeck(3);
+                for (PlayerMoveThread player : myPlayers) {
+                    // Perform actions: drawing and discarding cards
+                    player.drawCard();   // Player draws a card
+                    player.discardCard(); // Player discards a card
+                    
+                    // Optionally, print the player's hand
+                   
+                    this.showCardsInDeck(0);
+                    this.showCardsInDeck(1);
+                    this.showCardsInDeck(2);
+                    this.showCardsInDeck(3);
+                                                     
+                                                                
+                }
+
+                Thread.sleep(500);
+
+                if (isGameOver()) {
+                    gameInProgress = false;
+                    System.out.println("Game Over!");
+                    
+                }
+                
+            } catch (InterruptedException e) {
 
             }
         }
+    }
+
+    private boolean isGameOver() {
+        // Implement your game-over conditions here, such as when all players have won
+        // This is just a placeholder logic to stop the game if all players are done
+        for (PlayerMoveThread player : myPlayers) {
+            if (!player.isWinningHand()) {
+                return false; // If any player hasn't won, the game is still in progress
+            }
+        }
+        return true; // If all players are done, the game is over
     }
 
     public void createPlayers(int nPlayer) {
