@@ -1,0 +1,10 @@
+player1 draws a 6 from deck 1
+player1 discards a 1 to deck 1
+player1 draws a 5 from deck 1
+player1 discards a 2 to deck 1
+player1 draws a 7 from deck 1
+player1 discards a 3 to deck 1
+player1 draws a 3 from deck 1
+player1 discards a 3 to deck 1
+player1 draws a 2 from deck 1
+player1 discards a 2 to deck 1

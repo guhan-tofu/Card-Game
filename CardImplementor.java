@@ -1,4 +1,5 @@
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -24,10 +25,7 @@ public class CardImplementor extends Thread {//can be BasicThread
         CardImplementor ioProcessor = new CardImplementor();
         // create the decks
         
-        myDecks.add(new Deck());
-        myDecks.add(new Deck());
-        myDecks.add(new Deck());
-        myDecks.add(new Deck());
+        
 
 
         
@@ -50,11 +48,11 @@ public class CardImplementor extends Thread {//can be BasicThread
         ioProcessor.distributeToPlayers(4);
         ioProcessor.distributeToDecks(4);
 
-        // register listeners with the source
-        ioProcessor.addplayerMoveEventListener(player1Thread); // fileThread being registered as a FileWrite Event listener
-        ioProcessor.addplayerMoveEventListener(player2Thread);
-        ioProcessor.addplayerMoveEventListener(player3Thread);
-        ioProcessor.addplayerMoveEventListener(player4Thread);
+        // // register listeners with the source
+        // ioProcessor.addplayerMoveEventListener(player1Thread); // fileThread being registered as a FileWrite Event listener
+        // ioProcessor.addplayerMoveEventListener(player2Thread);
+        // ioProcessor.addplayerMoveEventListener(player3Thread);
+        // ioProcessor.addplayerMoveEventListener(player4Thread);
 
         System.out.println("starting threads");
         // start listening threads
@@ -133,7 +131,7 @@ public class CardImplementor extends Thread {//can be BasicThread
 
         // create the decks
         for (int i = 0; i < nPlayer; i++) {
-            myDecks.add(new Deck());
+            myDecks.add(new Deck(i));
         }
         
         // create the players with circular deck references

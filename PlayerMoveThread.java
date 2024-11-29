@@ -1,3 +1,4 @@
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -69,22 +70,33 @@ public class PlayerMoveThread extends BasicThread implements PlayerMoveEventList
 
                 // Exit if game is over to avoid unnecessary work
                 if (gameOver) {
+                    for(Deck decks : CardImplementor.myDecks){
+                        decks.writeAllCardsToFile();
+                    }
                     break;
                 }
 
-                doBoth(); // Perform card operations
+                doBoth(id+1); // Perform card operations
             }
         }
         // Thread naturally exits here
     }
 
-    public synchronized void doBoth(){
+    public synchronized void doBoth(int idnum){
         Card cardToDraw = leftDeck.drawCard();
         System.out.println("Card to Draw : "+cardToDraw);
         hand.addCard(cardToDraw);
+        // add thread writing here 
         Card cardToDiscard = hand.discardCard();
         System.out.println("Card to Discard : "+ cardToDiscard);
         rightDeck.addCard(cardToDiscard);
+        // add thread writing here
+        try (FileWriter writer = new FileWriter(Integer.toString(idnum)+"_output.txt", true)) { // true for append mode
+        writer.write("player" + Integer.toString(idnum)+  " draws a " +cardToDraw+ " from deck 1" + "\n");
+        writer.write("player" + Integer.toString(idnum)+  " discards a " +cardToDiscard+ " to deck 1" + "\n");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
 
         

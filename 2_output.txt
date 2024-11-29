@@ -1,0 +1,10 @@
+player2 draws a 7 from deck 1
+player2 discards a 2 to deck 1
+player2 draws a 1 from deck 1
+player2 discards a 4 to deck 1
+player2 draws a 9 from deck 1
+player2 discards a 7 to deck 1
+player2 draws a 9 from deck 1
+player2 discards a 9 to deck 1
+player2 draws a 1 from deck 1
+player2 discards a 9 to deck 1
