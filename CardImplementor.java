@@ -41,7 +41,7 @@ public class CardImplementor extends Thread {//can be BasicThread
         myPlayers.add(player3Thread);
         myPlayers.add(player4Thread);
 
-        ioProcessor.loadCardsFromFile("Pack.txt");
+        //ioProcessor.loadCardsFromFile("Pack.txt");
         // impl.showCardValues();
 
 
@@ -125,7 +125,10 @@ public class CardImplementor extends Thread {//can be BasicThread
 
     public void createPlayers(int nPlayer) {
 
-        
+        if (nPlayer < 2){
+            throw new IllegalArgumentException(
+                    "Number of players must be at least 2. Found: " + nPlayer);
+        }
         myDecks.clear();
         myPlayers.clear();
 
@@ -170,15 +173,22 @@ public class CardImplementor extends Thread {//can be BasicThread
     }
 
 
-    public void loadCardsFromFile(String filename) {
-
+    public void loadCardsFromFile(String filename, int numofPlayers) {
+        ArrayList<Card> tempCards = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
             String line;
             while ((line = br.readLine()) != null) {
                 int value = Integer.parseInt(line.trim()); // Convert each line to an integer
-                Card card = new Card(value);               // Create a new Card object
-                myCards.add(card);                         // Add the card to the ArrayList
+                Card card = new Card(value);
+                tempCards.add(card);               // Create a new Card object
+                                        // Add the card to the ArrayList
             }
+
+            if (tempCards.size() != 8 * numofPlayers) {
+                throw new IllegalArgumentException(
+                    "The file does not contain the required " + (8 * numofPlayers) + " cards. Found: " + tempCards.size());
+            }
+            myCards.addAll(tempCards); 
         } catch (IOException e) {
             System.out.println("Error reading file: " + e.getMessage());
         } catch (NumberFormatException e) {
