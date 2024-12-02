@@ -26,9 +26,9 @@ public class test2 {
         impl.showCardsInDeck(1);
         
 
-        for(PlayerMoveThread thrd : CardImplementor.myPlayers){
-            System.out.println(thrd.getLeftDeck());
-        }
+        // for(PlayerMoveThread thrd : CardImplementor.myPlayers){
+        //     System.out.println(thrd.getLeftDeck());
+        // }
 
 
         for(PlayerMoveThread myThing : CardImplementor.myPlayers){

@@ -1,10 +1,13 @@
-player1 draws a 6 from deck 1
-player1 discards a 1 to deck 1
-player1 draws a 5 from deck 1
-player1 discards a 2 to deck 1
-player1 draws a 7 from deck 1
-player1 discards a 3 to deck 1
-player1 draws a 3 from deck 1
-player1 discards a 3 to deck 1
-player1 draws a 2 from deck 1
-player1 discards a 2 to deck 1
+player 1 draws a 6 from deck 1
+player 1 discards a 1 to deck 0
+player 1 draws a 5 from deck 1
+player 1 discards a 2 to deck 0
+player 1 draws a 7 from deck 1
+player 1 discards a 3 to deck 0
+player 1 draws a 3 from deck 1
+player 1 discards a 3 to deck 0
+player 1 draws a 2 from deck 1
+player 1 discards a 2 to deck 0
+player 2 has informed player 1 that player 2 has won
+player 1 exits
+player 1 final hand: 5 6 5 7

@@ -48,6 +48,26 @@ public class PlayerMoveThread extends BasicThread implements PlayerMoveEventList
                 synchronized (PlayerMoveThread.class) {  // Ensure one thread declares victory
                     if (!gameOver) {  // Double-check the flag to avoid race conditions
                         gameOver = true;
+                        String winnerHand = hand.getCardsInHand();
+                        try (FileWriter writer = new FileWriter(Integer.toString(id+1)+"_output.txt", true)) { // true for append mode
+                            writer.write("player " + Integer.toString(id + 1)+  " wins" + "\n");
+                            writer.write("player " + Integer.toString(id + 1)+  " exits" + "\n");
+                            writer.write("player " + (id + 1) + " final hand: " + winnerHand + "\n");
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        for (PlayerMoveThread player : CardImplementor.myPlayers){
+                            if (player.id != this.id) { // Exclude the current (winning) player
+                                String finalHand = player.hand.getCardsInHand();
+                                try (FileWriter writer = new FileWriter(Integer.toString(player.id + 1) + "_output.txt", true)) {
+                                    writer.write("player " + (this.id + 1) + " has informed player " + (player.id + 1) + " that player " + (this.id + 1) + " has won\n");
+                                    writer.write("player " + Integer.toString(player.id + 1)+  " exits" + "\n");
+                                    writer.write("player " + (player.id + 1) + " final hand: " + finalHand + "\n");
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
                         System.out.println("Player " + (id + 1) + " has won!");
                         System.out.println(" ");
                         imple.showCardsInHand(0);
@@ -84,6 +104,8 @@ public class PlayerMoveThread extends BasicThread implements PlayerMoveEventList
 
     public synchronized void doBoth(int idnum){
         Card cardToDraw = leftDeck.drawCard();
+        int leftDeckIndex = CardImplementor.myDecks.indexOf(leftDeck);
+        int rightDeckIndex = CardImplementor.myDecks.indexOf(rightDeck);
         System.out.println("Card to Draw : "+cardToDraw);
         hand.addCard(cardToDraw);
         // add thread writing here 
@@ -92,8 +114,8 @@ public class PlayerMoveThread extends BasicThread implements PlayerMoveEventList
         rightDeck.addCard(cardToDiscard);
         // add thread writing here
         try (FileWriter writer = new FileWriter(Integer.toString(idnum)+"_output.txt", true)) { // true for append mode
-        writer.write("player" + Integer.toString(idnum)+  " draws a " +cardToDraw+ " from deck 1" + "\n");
-        writer.write("player" + Integer.toString(idnum)+  " discards a " +cardToDiscard+ " to deck 1" + "\n");
+        writer.write("player " + Integer.toString(idnum)+  " draws a " +cardToDraw+ " from deck "+leftDeckIndex + "\n");
+        writer.write("player " + Integer.toString(idnum)+  " discards a " +cardToDiscard+ " to deck "+rightDeckIndex + "\n");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -225,6 +247,16 @@ public class PlayerMoveThread extends BasicThread implements PlayerMoveEventList
                 if (card != null) {
                     System.out.println("card id: " +card.getId()+ " card value: " + card.getValue());
             }}
+        }
+
+        public String getCardsInHand() {
+            StringBuilder sb = new StringBuilder();
+            for (Card card : cards) {
+                if (card != null) {
+                    sb.append(card.getValue()).append(" ");
+                }
+            }
+            return sb.toString().trim(); // Remove trailing space
         }
     }
 }

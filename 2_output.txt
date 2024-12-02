@@ -1,10 +1,13 @@
-player2 draws a 7 from deck 1
-player2 discards a 2 to deck 1
-player2 draws a 1 from deck 1
-player2 discards a 4 to deck 1
-player2 draws a 9 from deck 1
-player2 discards a 7 to deck 1
-player2 draws a 9 from deck 1
-player2 discards a 9 to deck 1
-player2 draws a 1 from deck 1
-player2 discards a 9 to deck 1
+player 2 draws a 7 from deck 0
+player 2 discards a 2 to deck 1
+player 2 draws a 1 from deck 0
+player 2 discards a 4 to deck 1
+player 2 draws a 9 from deck 0
+player 2 discards a 7 to deck 1
+player 2 draws a 9 from deck 0
+player 2 discards a 9 to deck 1
+player 2 draws a 1 from deck 0
+player 2 discards a 9 to deck 1
+player 2 wins
+player 2 exits
+player 2 final hand: 1 1 1 1
