@@ -1,11 +1,12 @@
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class PlayerMoveThread extends BasicThread implements PlayerMoveEventListener {
+public class PlayerMoveThread extends BasicThread  {
 
     public PlayerMoveThread(Deck leftDeck, Deck rightDeck) throws IOException {
         // Initialize with a unique file for each player
@@ -17,11 +18,6 @@ public class PlayerMoveThread extends BasicThread implements PlayerMoveEventList
     }
 
 
-    @Override
-    public void eventOccured(PlayerMoveEvent evt) throws IOException {
-        // Write the event message to the player-specific file
-        this.writeToFile(evt.getMessage());
-    }
 
     private static int idCounter = 0;
     private final int id;
@@ -29,8 +25,34 @@ public class PlayerMoveThread extends BasicThread implements PlayerMoveEventList
     private final Deck rightDeck;
     private final Hand hand = new Hand();
     private static volatile boolean gameOver = false;
+    private static final int HISTORY_SIZE = 5;
+    private final int[][] moveHistory = new int[HISTORY_SIZE][];
+    private static int historyCounter = 0;
 
+    // Function to update the move history
+    public synchronized void updateMoveHistory(int[] currentMove) {
+        // Add the current move to the history (circular buffer logic)
+        moveHistory[historyCounter % HISTORY_SIZE] = currentMove;
+        historyCounter++;
+    }
 
+    // Function to check if the last 5 moves are the same
+    public synchronized boolean areLastFiveMovesIdentical() {
+        if (historyCounter < HISTORY_SIZE) {
+            return false; // Not enough history to check
+        }
+
+        // Get the reference to the first move in the history
+        int[] firstMove = moveHistory[0];
+
+        for (int i = 1; i < HISTORY_SIZE; i++) {
+            if (!Arrays.equals(firstMove, moveHistory[i])) {
+                return false;
+            }
+        }
+
+        return true;
+    }
 
     public Deck getLeftDeck(){
         return this.leftDeck;
@@ -103,6 +125,15 @@ public class PlayerMoveThread extends BasicThread implements PlayerMoveEventList
     }
 
     public synchronized void doBoth(int idnum){
+        int[] currentCards = getCardValues();
+
+        // Update history
+        updateMoveHistory(currentCards);
+        if (areLastFiveMovesIdentical()) {
+            setChecker();
+            // Set some flag or take an action here
+        }
+        
         Card cardToDraw = leftDeck.drawCard();
         int leftDeckIndex = CardImplementor.myDecks.indexOf(leftDeck);
         int rightDeckIndex = CardImplementor.myDecks.indexOf(rightDeck);
@@ -150,26 +181,61 @@ public class PlayerMoveThread extends BasicThread implements PlayerMoveEventList
         return hand.isWinningHand();
     }
 
+    public int[] getCardValues(){
+        return hand.getCardValues();
+    }
+
+    public void setChecker(){
+        hand.setChecker();
+    }
 
 
     private class Hand {
         private volatile List<Card> cards = new ArrayList<>();
-
+        private volatile boolean checker = false;
         public void addCard(Card card) {//id of card instead
             cards.add(card);
         }
 
+        public void setChecker(){
+            checker = true;
+        }
+
+        public int[] getCardValues() {
+            int[] cards4 = new int[4];
+            int index = 0; // Track the position to insert into the array
+        
+            for (Card card : cards) {
+                if (card == null) {
+                    continue; // Skip null cards
+                }
+                if (index < 4) { // Ensure we only fill up to 4 values
+                    cards4[index] = card.getValue();
+                    index++;
+                }
+            }
+        
+            return cards4;
+        }
+        
+
     
-
-        // public Card discardCard() {
-        //     // Implement discard logic, e.g., selecting a card to discard
-        //     return cards.remove(0); // Example of discarding the first card
-        // }
-
         public synchronized Card discardCard() {
             if (cards.isEmpty()) {
                 throw new IllegalStateException("No cards to discard.");
             }
+
+
+            if(checker == true){
+                // Fallback: Remove the first non-null card
+                for (int i = 0; i < cards.size(); i++) {
+                    if (cards.get(i) != null) {
+                        checker = false;
+                        return cards.remove(i);
+                    }
+                }
+                
+                }
         
             // Step 1: Count occurrences of card values
             Map<Integer, Integer> valueCount = new HashMap<>();
@@ -199,13 +265,8 @@ public class PlayerMoveThread extends BasicThread implements PlayerMoveEventList
                     return cards.remove(i);
                 }
             }
-        
-            // Fallback: Remove the first non-null card
-            for (int i = 0; i < cards.size(); i++) {
-                if (cards.get(i) != null) {
-                    return cards.remove(i);
-                }
-            }
+            
+            
         
             // If all cards are null, throw an exception
             throw new IllegalStateException("All cards are null; cannot discard.");

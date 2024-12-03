@@ -1,8 +1,6 @@
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class CardImplementor extends Thread {//can be BasicThread
@@ -10,7 +8,7 @@ public class CardImplementor extends Thread {//can be BasicThread
     public static ArrayList<Deck> myDecks = new ArrayList<>();
     public static ArrayList<PlayerMoveThread> myPlayers = new ArrayList<>();
     private ArrayList<Card> myCards = new ArrayList<>();
-    private ArrayList<PlayerMoveEventListener> PlayerListeners = new ArrayList<>(); // Keep array of our threads that listen to PlayerMove
+   
     private static volatile boolean gameInProgress = true;
 
     // private CardImplementor() throws java.io.IOException {
@@ -173,15 +171,7 @@ public class CardImplementor extends Thread {//can be BasicThread
     }
     
 
-    private void notifyplayerMoveWriteEventListeners(PlayerMoveEvent evt) throws IOException{ // responsible for notifying every thread in the List that the event occured  
-        for (PlayerMoveEventListener l : PlayerListeners)
-            l.eventOccured(evt);
-    }
-
-    public void addplayerMoveEventListener(PlayerMoveEventListener listener) {  // adding playermove event listener threads into the list (only allows threads that implement the respective listener)
-        this.PlayerListeners.add(listener);
-    }
-
+ 
 
 
 
