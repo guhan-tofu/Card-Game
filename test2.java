@@ -4,7 +4,7 @@ public class test2 {
 
         impl.createPlayers(2);
 
-        impl.loadCardsFromFile("pack3.txt", 2);
+        impl.loadCardsFromFile("pack2.txt", 2);
         // impl.showCardValues();
 
 
@@ -26,20 +26,18 @@ public class test2 {
         impl.showCardsInDeck(1);
         
 
-        // for(PlayerMoveThread thrd : CardImplementor.myPlayers){
-        //     System.out.println(thrd.getLeftDeck());
-        // }
-
 
         for(PlayerMoveThread myThing : CardImplementor.myPlayers){
-            //ThreadThing myThing = new ThreadThing();
             myThing.start();
-            // try{
-            //     myThing.join();
-            // }catch(InterruptedException e){
-            //     System.out.println(e);
-            // }
+      
         }
 
     }
 }
+//modify loadCardsFromFile -- validate pack and load path/directory
+//actual executable
+//clean up
+//comments
+//error handling
+//jUnit
+// readME

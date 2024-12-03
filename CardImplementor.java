@@ -7,25 +7,9 @@ public class CardImplementor extends Thread {//can be BasicThread
     
     public static ArrayList<Deck> myDecks = new ArrayList<>();
     public static ArrayList<PlayerMoveThread> myPlayers = new ArrayList<>();
-    private ArrayList<Card> myCards = new ArrayList<>();
+    private final ArrayList<Card> myCards = new ArrayList<>();
    
-    private static volatile boolean gameInProgress = true;
-
-    // private CardImplementor() throws java.io.IOException {
-    //     super("IOProcessor_input.txt");
-    // }
-
-
-    private boolean isGameOver() {
-        // Implement your game-over conditions here, such as when all players have won
-        // This is just a placeholder logic to stop the game if all players are done
-        for (PlayerMoveThread player : myPlayers) {
-            if (!player.isWinningHand()) {
-                return false; // If any player hasn't won, the game is still in progress
-            }
-        }
-        return true; // If all players are done, the game is over
-    }
+    
 
     public void createPlayers(int nPlayer) {
 
@@ -136,40 +120,8 @@ public class CardImplementor extends Thread {//can be BasicThread
         player.showCardsInHand();
     }
 
-    public void playerMove(int playerId){
-        PlayerMoveThread player = myPlayers.get(playerId);
-        player.drawCard();
-        player.discardCard();
-        
-    }
+ 
 
-    public void startPlayers() {
-        List<Thread> playerThreads = new ArrayList<>();
-    
-        // Start all player threads
-        for (PlayerMoveThread player : myPlayers) {
-            Thread playerThread = new Thread(player); // Wrap each Player in a Thread
-            playerThreads.add(playerThread);
-            playerThread.start(); // Start the Thread
-        }
-    
-        // Sleep for a brief moment to allow all threads to start simultaneously
-        try {
-            Thread.sleep(100); // 100 milliseconds or any brief delay
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    
-        // Join all player threads to wait for their completion
-        for (Thread playerThread : playerThreads) {
-            try {
-                playerThread.join(); // Wait for each thread to finish
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-    
 
  
 
