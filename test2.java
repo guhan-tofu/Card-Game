@@ -4,11 +4,7 @@ public class test2 {
 
         impl.createPlayers(2);
 
-<<<<<<< HEAD
-        impl.loadCardsFromFile("pack3.txt", 2);
-=======
         impl.loadCardsFromFile("pack2.txt", 2);
->>>>>>> 312354be11bd28da7ca2b13f140a5ac7617f38d1
         // impl.showCardValues();
 
 

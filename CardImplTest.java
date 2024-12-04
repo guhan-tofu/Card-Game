@@ -1,3 +1,4 @@
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -6,6 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.List;
+import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -17,6 +19,19 @@ public class CardImplTest {
     @BeforeEach
     void setUp() {
         cardImplementor = new CardImplementor();
+    }
+
+    @AfterEach
+    void tearDown() {
+        // Delete the files created during the test
+        IntStream.rangeClosed(1, numOfPlayers).forEach(playerIndex -> {
+            Path filePath = Path.of("player" + playerIndex + "_output.txt");
+            try {
+                Files.deleteIfExists(filePath);
+            } catch (IOException e) {
+                System.err.println("Failed to delete file: " + filePath);
+            }
+        });
     }
 
     @Test
