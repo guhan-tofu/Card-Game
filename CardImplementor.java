@@ -3,14 +3,14 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
 
-public class CardImplementor extends Thread {//can be BasicThread
+public class CardImplementor implements CardInterface {
     
     public static ArrayList<Deck> myDecks = new ArrayList<>();
     public static ArrayList<PlayerMoveThread> myPlayers = new ArrayList<>();
     private final ArrayList<Card> myCards = new ArrayList<>();
    
     
-
+    @Override
     public void createPlayers(int nPlayer) {
 
         if (nPlayer < 2){
@@ -48,6 +48,7 @@ public class CardImplementor extends Thread {//can be BasicThread
         }
     }
 
+    @Override
     public String showPlayerDetails(int playerId) {
         PlayerMoveThread player = myPlayers.get(playerId);
         Deck leftDeck = player.getLeftDeck();
@@ -60,7 +61,7 @@ public class CardImplementor extends Thread {//can be BasicThread
         return "Left deck: " + leftDeckIndex + ", Right deck: " + rightDeckIndex;
     }
 
-
+    @Override
     public void loadCardsFromFile(String filename, int numofPlayers) {
         ArrayList<Card> tempCards = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
@@ -84,55 +85,42 @@ public class CardImplementor extends Thread {//can be BasicThread
         }
     }
 
-
+    @Override
     public void showCardValues(){
         for (Card card : myCards) {
             System.out.println("Card{id=" + card.getId() + ", value=" + card.getValue() + "}");
         }
     }
 
-
-
+    @Override
     public void distributeToPlayers(int nPlayer){
         for (int i = 0; i < (4*nPlayer); i++){
             Card card = myCards.get(i);
             PlayerMoveThread player = myPlayers.get(i%nPlayer);
             player.addCardToHand(card);
         }
-        }
+    }
    
-
+    @Override
     public void distributeToDecks(int nPlayer){
         for (int i = 4*nPlayer; i < (8*nPlayer); i++){
             Card card = myCards.get(i);
             Deck deck = myDecks.get(i%nPlayer);
             deck.addCard(card);
         }
-        }
+    }
 
+    @Override        
     public void showCardsInDeck(int deckId){
         Deck deck = myDecks.get(deckId);
         deck.showCards();
     }
 
+    @Override 
     public void showCardsInHand(int playerId){
         PlayerMoveThread player = myPlayers.get(playerId);
         player.showCardsInHand();
     }
 
  
-
-
- 
-
-
-
-
-
-    
-
-
-
-       
-
 }
