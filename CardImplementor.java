@@ -8,7 +8,11 @@ public class CardImplementor implements CardInterface {
     public static ArrayList<Deck> myDecks = new ArrayList<>();
     public static ArrayList<PlayerMoveThread> myPlayers = new ArrayList<>();
     private final ArrayList<Card> myCards = new ArrayList<>();
-   
+    
+
+    public ArrayList<Card> getMyCards() {
+        return myCards;
+    }
     
     @Override
     public void createPlayers(int nPlayer) {

@@ -1,10 +1,18 @@
 import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import java.io.*;
 import java.util.List;
 import java.util.ArrayList;
 
 public class DeckTest {
+
+
+    @BeforeEach
+    void setUp() {
+        Card.resetCardCounter();
+    }
 
     @Test
     public void testDeckFileCreation() {
@@ -79,7 +87,7 @@ public class DeckTest {
     @Test
     public void testShowCards() {
         // Arrange
-        Deck deck = new Deck(5);
+        Deck deck = new Deck(87);
         Card card1 = new Card(10);
         Card card2 = new Card(20);
 

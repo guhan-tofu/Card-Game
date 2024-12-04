@@ -317,7 +317,7 @@ public class PlayerMoveThread extends BasicThread  {
             for (Card card : cards) {
                 if (card != null) {
                     sb.append(card.getValue()).append(" ");
-                }
+                }       
             }
             return sb.toString().trim(); // Remove trailing space
         }
