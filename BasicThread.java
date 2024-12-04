@@ -11,18 +11,14 @@ public abstract class BasicThread extends Thread {
     }
     
 
-    public void run() {
-        for(;;) { // infinite loop
-            //System.out.println("Thread "+ Thread.currentThread().getName() + " is waiting");
-            try { 
-                Thread.sleep(1000); // sleeps every 1 second each iteration
-            } catch(InterruptedException e) {}
-        }
-    }
+    // public void run() {
+    //     for(;;) { // infinite loop
+    //         //System.out.println("Thread "+ Thread.currentThread().getName() + " is waiting");
+    //         try { 
+    //             Thread.sleep(1000); // sleeps every 1 second each iteration
+    //         } catch(InterruptedException e) {}
+    //     }
+    // }
     
-    protected void writeToFile(String message) throws IOException {
-        this.out.write(message);
-        this.out.newLine();
-        this.out.flush(); // Forces any buffered output to be written to the file immediately
-    }
+
 }
