@@ -1,1 +1,1 @@
-0_deck.txt contents: 17 3 16 2 
+0_deck.txt contents: 2 3 3 2 

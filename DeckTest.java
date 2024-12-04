@@ -35,6 +35,7 @@ public class DeckTest {
         deck.addCard(card2);
 
         assertEquals(2, deck.getSize(), "Deck size should be 2 after adding two cards.");
+        assertNotEquals(3, deck.getSize(), "Deck size should be 2 after adding two cards.");
     }
 
     @Test
