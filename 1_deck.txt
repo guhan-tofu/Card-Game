@@ -1,4 +1,1 @@
-<<<<<<< HEAD
-1_deck.txt contents: 4 7 9 9 
-=======
->>>>>>> 312354be11bd28da7ca2b13f140a5ac7617f38d1
+1_deck.txt contents: 4 3 5 7 

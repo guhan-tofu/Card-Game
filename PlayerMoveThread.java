@@ -2,9 +2,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class PlayerMoveThread extends BasicThread  {
 
@@ -172,6 +170,10 @@ public class PlayerMoveThread extends BasicThread  {
         hand.addCard(card);
     }
 
+    public int getPlayerId(){
+        return this.id;
+    }
+
     public void showCardsInHand() {
         hand.showCardsInHand(); // Delegate to Hand's method
     }
@@ -217,59 +219,6 @@ public class PlayerMoveThread extends BasicThread  {
             return cards4;
         }
         
-
-    
-        public synchronized Card discardCard() {
-            if (cards.isEmpty()) {
-                throw new IllegalStateException("No cards to discard.");
-            }
-
-
-            if(checker == true){
-                // Fallback: Remove the first non-null card
-                for (int i = 0; i < cards.size(); i++) {
-                    if (cards.get(i) != null) {
-                        checker = false;
-                        return cards.remove(i);
-                    }
-                }
-                
-                }
-        
-            // Step 1: Count occurrences of card values
-            Map<Integer, Integer> valueCount = new HashMap<>();
-            for (Card card : cards) {
-                if (card == null) {
-                    continue; // Skip null cards
-                }
-                int value = card.getValue();
-                valueCount.put(value, valueCount.getOrDefault(value, 0) + 1);
-            }
-        
-            // Step 2: Find the least occurring card value
-            int leastOccurringValue = -1;
-            int minCount = Integer.MAX_VALUE;
-        
-            for (Map.Entry<Integer, Integer> entry : valueCount.entrySet()) {
-                if (entry.getValue() < minCount) {
-                    minCount = entry.getValue();
-                    leastOccurringValue = entry.getKey();
-                }
-            }
-        
-            // Step 3: Remove a card with the least occurring value
-            for (int i = 0; i < cards.size(); i++) {
-                Card card = cards.get(i);
-                if (card != null && card.getValue() == leastOccurringValue) {
-                    return cards.remove(i);
-                }
-            }
-            
-            
-        
-            // If all cards are null, throw an exception
-            throw new IllegalStateException("All cards are null; cannot discard.");
-        }
 
         public synchronized boolean isWinningHand() {
             if (cards.isEmpty()) {
@@ -318,5 +267,38 @@ public class PlayerMoveThread extends BasicThread  {
             }
             return sb.toString().trim(); // Remove trailing space
         }
+
+
+        public synchronized Card discardCard() {
+            int playerId = (getPlayerId()+1); // Use the player's ID as the preferred card value
+
+            if (cards.isEmpty()) {
+                throw new IllegalStateException("No cards to discard.");
+            }
+
+
+            if(checker == true){
+                // Fallback: Remove the first non-null card
+                for (int i = 0; i < cards.size(); i++) {
+                    if (cards.get(i) != null) {
+                        checker = false;
+                        return cards.remove(i);
+                    }
+                }    
+            }
+        
+            for (int i = 0; i < cards.size(); i++) {
+                Card card = cards.get(i);
+                if (card != null && card.getValue() != playerId) {
+                    return cards.remove(i); // Discard the first non-preferred card
+                }
+            }
+            
+            
+        
+            // If all cards are null, throw an exception
+            throw new IllegalStateException("All cards are null; cannot discard.");
+        }
+
     }
 }
