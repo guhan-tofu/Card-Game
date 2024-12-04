@@ -10,7 +10,7 @@ public class Deck {
     // Constructor
     public Deck(int deckId) {
         // Assign a unique file name based on the deck ID
-        this.fileName = deckId + "_deck.txt";
+        this.fileName = (deckId+1) + "_deck.txt";
         createDeckFile();
     }
 
