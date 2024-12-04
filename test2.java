@@ -2,14 +2,14 @@ public class test2 {
     public static void main(String[] args) {
         CardImplementor impl = new CardImplementor();
 
-        impl.createPlayers(5);
+        impl.createPlayers(2);
 
-        impl.loadCardsFromFile("pack4.txt", 5);
+        impl.loadCardsFromFile("pack2.txt", 2);
         // impl.showCardValues();
 
 
-        impl.distributeToPlayers(5);
-        impl.distributeToDecks(5);
+        impl.distributeToPlayers(2);
+        impl.distributeToDecks(2);
         System.out.println(impl.showPlayerDetails(0));
         System.out.println(impl.showPlayerDetails(1));
 
