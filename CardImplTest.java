@@ -37,25 +37,42 @@ public class CardImplTest {
 
     @Test
     void testLoadCardsFromFile() throws IOException {
-        // Create a temporary file with card values
+        // Create a temporary file with valid card values
         Path tempFile = Files.createTempFile("cards", ".txt");
-        List<String> cardValues = List.of("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32");
+        List<String> cardValues = List.of(
+            "1", "1", "1", "1", 
+            "2", "2", "2", "2", 
+            "3", "3", "3", "3", 
+            "4", "4", "4", "4", 
+            "5", "5", "5", "5", 
+            "6", "6", "6", "6", 
+            "7", "7", "7", "7", 
+            "8", "8", "8", "8"
+        );
+
         Files.write(tempFile, cardValues, StandardOpenOption.WRITE);
 
+        // Act
         cardImplementor.loadCardsFromFile(tempFile.toString(), numOfPlayers);
 
         Files.deleteIfExists(tempFile); // Clean up temporary file
 
+        // Assert
         List<Card> myCards = cardImplementor.getMyCards();
-
         assertEquals(8 * numOfPlayers, myCards.size(), "Loaded card count should match expected count.");
     }
 
     @Test
     void testShowCardValues() {
+        // Arrange
         cardImplementor.createPlayers(numOfPlayers);
-        cardImplementor.loadCardsFromFile(createTempCardFile(), numOfPlayers);
-        assertDoesNotThrow(() -> cardImplementor.showCardValues(), "ShowCardValues should not throw any exceptions.");
+        String tempCardFile = createTempCardFile();
+
+        // Act & Assert
+        assertDoesNotThrow(() -> cardImplementor.loadCardsFromFile(tempCardFile, numOfPlayers),
+            "LoadCardsFromFile should not throw any exceptions.");
+        assertDoesNotThrow(() -> cardImplementor.showCardValues(),
+            "ShowCardValues should not throw any exceptions.");
     }
 
     @Test
@@ -101,8 +118,11 @@ public class CardImplTest {
             Path tempFile = Files.createTempFile("cards", ".txt");
             StringBuilder cardValues = new StringBuilder();
 
-            for (int i = 1; i <= 8 * numOfPlayers; i++) {
-                cardValues.append(i).append("\n");
+            // Create valid card values for the test
+            for (int i = 1; i <= 8; i++) {
+                for (int j = 0; j < numOfPlayers; j++) {
+                    cardValues.append(i).append("\n");
+                }
             }
 
             Files.writeString(tempFile, cardValues.toString());
