@@ -93,10 +93,7 @@ public class PlayerMoveThread extends BasicThread  {
                             }
                         }
                         System.out.println("Player " + (id + 1) + " has won!");
-                        System.out.println(" ");
-                        imple.showCardsInHand(0);
-                        System.out.println(" ");
-                        imple.showCardsInHand(1);
+                     
                       
                         
                     }
