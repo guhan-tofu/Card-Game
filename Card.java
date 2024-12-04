@@ -3,6 +3,9 @@ public class Card{
     private static int idCounter = 0;
     private int id;
     
+    public static void resetCardCounter() {
+        idCounter = 0;
+    }
 
     public Card(int value){
         this.value = value;

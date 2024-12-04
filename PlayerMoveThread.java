@@ -10,7 +10,7 @@ public class PlayerMoveThread extends BasicThread  {
 
     public PlayerMoveThread(Deck leftDeck, Deck rightDeck) throws IOException {
         // Initialize with a unique file for each player
-        super((idCounter+1) + "_output.txt");
+        super("player"+(idCounter+1) + "_output.txt");
         this.id = idCounter++;
         this.leftDeck = leftDeck;
         this.rightDeck = rightDeck;
@@ -36,6 +36,8 @@ public class PlayerMoveThread extends BasicThread  {
         historyCounter++;
     }
 
+    
+    
     // Function to check if the last 5 moves are the same
     public synchronized boolean areLastFiveMovesIdentical() {
         if (historyCounter < HISTORY_SIZE) {
@@ -71,7 +73,7 @@ public class PlayerMoveThread extends BasicThread  {
                     if (!gameOver) {  // Double-check the flag to avoid race conditions
                         gameOver = true;
                         String winnerHand = hand.getCardsInHand();
-                        try (FileWriter writer = new FileWriter(Integer.toString(id+1)+"_output.txt", true)) { // true for append mode
+                        try (FileWriter writer = new FileWriter("player"+Integer.toString(id+1)+"_output.txt", true)) { // true for append mode
                             writer.write("player " + Integer.toString(id + 1)+  " wins" + "\n");
                             writer.write("player " + Integer.toString(id + 1)+  " exits" + "\n");
                             writer.write("player " + (id + 1) + " final hand: " + winnerHand + "\n");
@@ -81,7 +83,7 @@ public class PlayerMoveThread extends BasicThread  {
                         for (PlayerMoveThread player : CardImplementor.myPlayers){
                             if (player.id != this.id) { // Exclude the current (winning) player
                                 String finalHand = player.hand.getCardsInHand();
-                                try (FileWriter writer = new FileWriter(Integer.toString(player.id + 1) + "_output.txt", true)) {
+                                try (FileWriter writer = new FileWriter("player"+Integer.toString(player.id + 1) + "_output.txt", true)) {
                                     writer.write("player " + (this.id + 1) + " has informed player " + (player.id + 1) + " that player " + (this.id + 1) + " has won\n");
                                     writer.write("player " + Integer.toString(player.id + 1)+  " exits" + "\n");
                                     writer.write("player " + (player.id + 1) + " final hand: " + finalHand + "\n");
@@ -144,7 +146,7 @@ public class PlayerMoveThread extends BasicThread  {
         System.out.println("Card to Discard : "+ cardToDiscard);
         rightDeck.addCard(cardToDiscard);
         // add thread writing here
-        try (FileWriter writer = new FileWriter(Integer.toString(idnum)+"_output.txt", true)) { // true for append mode
+        try (FileWriter writer = new FileWriter("player"+Integer.toString(idnum)+"_output.txt", true)) { // true for append mode
         writer.write("player " + Integer.toString(idnum)+  " draws a " +cardToDraw+ " from deck "+leftDeckIndex + "\n");
         writer.write("player " + Integer.toString(idnum)+  " discards a " +cardToDiscard+ " to deck "+rightDeckIndex + "\n");
         } catch (IOException e) {
@@ -315,7 +317,7 @@ public class PlayerMoveThread extends BasicThread  {
             for (Card card : cards) {
                 if (card != null) {
                     sb.append(card.getValue()).append(" ");
-                }
+                }       
             }
             return sb.toString().trim(); // Remove trailing space
         }
