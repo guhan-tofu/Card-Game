@@ -4,7 +4,7 @@ public class test2 {
 
         impl.createPlayers(2);
 
-        impl.loadCardsFromFile("pack3.txt", 2);
+        impl.loadCardsFromFile("C:\\Users\\ernes\\Downloads\\test.txt", 2);
         // impl.showCardValues();
 
 

@@ -1,4 +1,5 @@
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
@@ -62,28 +63,53 @@ public class CardImplementor implements CardInterface {
     }
 
     @Override
-    public void loadCardsFromFile(String filename, int numofPlayers) {
+    public void loadCardsFromFile(String path, int numofPlayers) {
         ArrayList<Card> tempCards = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                int value = Integer.parseInt(line.trim()); // Convert each line to an integer
-                Card card = new Card(value);
-                tempCards.add(card);               // Create a new Card object
-                                        // Add the card to the ArrayList
+        HashMap<Integer, Integer> cardFrequency = new HashMap<>();
+
+        File file = new File(path);
+
+        try {
+            // Ensure the path points to a file and ends with ".txt"
+            if (!file.isFile() || !file.getName().endsWith(".txt")) {
+                throw new IllegalArgumentException("Invalid path: Must provide a valid .txt file.");
             }
 
+            // Process the .txt file
+            try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+                String line;
+                while ((line = br.readLine()) != null) {
+                    int value = Integer.parseInt(line.trim()); // Convert each line to an integer
+                    Card card = new Card(value);
+                    tempCards.add(card); // Create a new Card object and add to the ArrayList
+
+                    // Count the occurrences of each card value
+                    cardFrequency.put(value, cardFrequency.getOrDefault(value, 0) + 1);
+                }
+            }
+
+            // Check if the pack size matches the required size
             if (tempCards.size() != 8 * numofPlayers) {
                 throw new IllegalArgumentException(
                     "The file does not contain the required " + (8 * numofPlayers) + " cards. Found: " + tempCards.size());
             }
-            myCards.addAll(tempCards); 
+
+            // Check if at least one card repeats four or more times
+            boolean hasValidRepetitions = cardFrequency.values().stream().anyMatch(count -> count >= 4);
+            if (!hasValidRepetitions) {
+                throw new IllegalArgumentException("The pack is invalid: no card repeats four or more times.");
+            }
+
+            myCards.addAll(tempCards); // Add all valid cards to the main card collection
+
         } catch (IOException e) {
             System.out.println("Error reading file: " + e.getMessage());
         } catch (NumberFormatException e) {
-            System.out.println("Invalid number format in file: " + e.getMessage()); // add exceptions for when nPlayers is not 8n cards 
+            System.out.println("Invalid number format in file: " + e.getMessage());
         }
     }
+
+    
 
     @Override
     public void showCardValues(){
