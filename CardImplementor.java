@@ -98,10 +98,18 @@ public class CardImplementor implements CardInterface {
                     "The file does not contain the required " + (8 * numofPlayers) + " cards. Found: " + tempCards.size());
             }
 
-            // Check if at least one card repeats four or more times
-            boolean hasValidRepetitions = cardFrequency.values().stream().anyMatch(count -> count >= 4);
-            if (!hasValidRepetitions) {
-                throw new IllegalArgumentException("The pack is invalid: no card repeats four or more times.");
+            // Check if at least one set of 4 cards matches one of the player indices
+            boolean hasValidRepetitionsForPlayers = false;
+            for (int playerId = 1; playerId <= numofPlayers; playerId++) { // Loop from 1 to numofPlayers
+                if (cardFrequency.getOrDefault(playerId, 0) >= 4) {
+                    hasValidRepetitionsForPlayers = true;
+                    break;
+                }
+            }
+
+            if (!hasValidRepetitionsForPlayers) {
+                throw new IllegalArgumentException(
+                    "The pack is invalid: no card value repeats four or more times for any player index.");
             }
 
             myCards.addAll(tempCards); // Add all valid cards to the main card collection

@@ -4,7 +4,7 @@ public class test2 {
 
         impl.createPlayers(2);
 
-        impl.loadCardsFromFile("pack2.txt", 2);
+        impl.loadCardsFromFile("pack3.txt", 2 );
         // impl.showCardValues();
 
 
@@ -34,8 +34,8 @@ public class test2 {
 
     }
 }
-//modify loadCardsFromFile -- validate pack and load path/directory
-//actual executable
+
+
 //clean up
 //comments
 //error handling

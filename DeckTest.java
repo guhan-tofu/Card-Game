@@ -18,7 +18,7 @@ public class DeckTest {
     public void testDeckFileCreation() {
         int deckId = 1;
         Deck deck = new Deck(deckId);
-        File deckFile = new File(deckId + "_deck.txt");
+        File deckFile = new File("deck"+(deckId+1) + "_output.txt");
 
         assertTrue(deckFile.exists(), "Deck file should be created.");
         // Clean up the created file after test
@@ -65,7 +65,7 @@ public class DeckTest {
 
         deck.writeAllCardsToFile();
 
-        File deckFile = new File(deckId + "_deck.txt");
+        File deckFile = new File("deck"+(deckId+1) + "_output.txt");
         assertTrue(deckFile.exists(), "Deck file should exist after writing.");
 
         // Read the file and verify its content
