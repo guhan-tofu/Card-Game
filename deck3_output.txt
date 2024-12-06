@@ -1,1 +1,0 @@
-deck3_output.txt contents: 20 24 34 36 

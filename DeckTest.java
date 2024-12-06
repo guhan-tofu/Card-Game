@@ -1,23 +1,32 @@
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.*;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import java.io.*;
 import java.util.List;
 import java.util.ArrayList;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class DeckTest {
+
+    private Deck deck;
+
+    @BeforeAll
+    void setUp() {
+        int deckId = 1;
+        deck = new Deck(deckId);
+    }
 
 
     @BeforeEach
-    void setUp() {
+    void resetUp() {
+        deck.clearDeck();
         Card.resetCardCounter();
     }
 
     @Test
     public void testDeckFileCreation() {
         int deckId = 1;
-        Deck deck = new Deck(deckId);
+        //Deck deck = new Deck(deckId);
         File deckFile = new File("deck"+(deckId+1) + "_output.txt");
 
         assertTrue(deckFile.exists(), "Deck file should be created.");
@@ -27,7 +36,7 @@ public class DeckTest {
 
     @Test
     public void testAddCardAndSize() {
-        Deck deck = new Deck(2);
+        //Deck deck = new Deck(2);
         Card card1 = new Card(10);
         Card card2 = new Card(20);
 
@@ -40,7 +49,7 @@ public class DeckTest {
 
     @Test
     public void testDrawCard() {
-        Deck deck = new Deck(3);
+        //Deck deck = new Deck(3);
         Card card1 = new Card(10);
         Card card2 = new Card(20);
 
@@ -55,8 +64,8 @@ public class DeckTest {
 
     @Test
     public void testWriteAllCardsToFile() throws IOException {
-        int deckId = 4;
-        Deck deck = new Deck(deckId);
+        int deckId = 1;
+        //Deck deck = new Deck(deckId);
         Card card1 = new Card(10);
         Card card2 = new Card(20);
 
@@ -88,7 +97,7 @@ public class DeckTest {
     @Test
     public void testShowCards() {
         // Arrange
-        Deck deck = new Deck(87);
+        //Deck deck = new Deck(87);
         Card card1 = new Card(10);
         Card card2 = new Card(20);
 

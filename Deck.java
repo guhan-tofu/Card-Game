@@ -40,6 +40,10 @@ public class Deck {
         return cards.size();  // No need to synchronize
     }
 
+    public void clearDeck() {
+        cards.clear();
+    }
+
     public void showCards() {
         for (Card card : cards) {
             if (card != null) {

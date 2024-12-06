@@ -1,1 +1,0 @@
-3_deck.txt contents: 20 24 34 36 

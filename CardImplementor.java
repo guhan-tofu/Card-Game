@@ -68,6 +68,7 @@ public class CardImplementor implements CardInterface {
 
     @Override
     public void loadCardsFromFile(String path, int numofPlayers) {
+        myCards.clear();
         ArrayList<Card> tempCards = new ArrayList<>();
         HashMap<Integer, Integer> cardFrequency = new HashMap<>();
 
@@ -99,18 +100,18 @@ public class CardImplementor implements CardInterface {
             }
 
             // Check if at least one set of 4 cards matches one of the player indices
-            boolean hasValidRepetitionsForPlayers = false;
-            for (int playerId = 1; playerId <= numofPlayers; playerId++) { // Loop from 1 to numofPlayers
-                if (cardFrequency.getOrDefault(playerId, 0) >= 4) {
-                    hasValidRepetitionsForPlayers = true;
-                    break;
-                }
-            }
+            // boolean hasValidRepetitionsForPlayers = false;
+            // for (int playerId = 1; playerId <= numofPlayers; playerId++) { // Loop from 1 to numofPlayers
+            //     if (cardFrequency.getOrDefault(playerId, 0) >= 4) {
+            //         hasValidRepetitionsForPlayers = true;
+            //         break;
+            //     }
+            // }
 
-            if (!hasValidRepetitionsForPlayers) {
-                throw new IllegalArgumentException(
-                    "The pack is invalid: no card value repeats four or more times for any player index.");
-            }
+            // if (!hasValidRepetitionsForPlayers) {
+            //     throw new IllegalArgumentException(
+            //         "The pack is invalid: no card value repeats four or more times for any player index.");
+            // }
 
             myCards.addAll(tempCards); // Add all valid cards to the main card collection
 

@@ -1,1 +1,0 @@
-deck4_output.txt contents: 16 25 30 35 

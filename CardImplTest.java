@@ -1,49 +1,36 @@
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
+import org.junit.jupiter.api.*;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.List;
-import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class CardImplTest {
 
     private CardImplementor cardImplementor;
     private final int numOfPlayers = 4;
 
-    @BeforeEach
+
+    @BeforeAll
     void setUp() {
         cardImplementor = new CardImplementor();
+        cardImplementor.createPlayers(numOfPlayers);
     }
 
-    @AfterEach
-    void tearDown() {
-        // Delete the files created during the test
-        IntStream.rangeClosed(1, numOfPlayers).forEach(playerIndex -> {
-            Path filePath = Path.of("player" + playerIndex + "_output.txt");
-            try {
-                Files.deleteIfExists(filePath);
-            } catch (IOException e) {
-                System.err.println("Failed to delete file: " + filePath);
-            }
-        });
-    }
+
 
     @Test
     void testCreatePlayers() {
-        cardImplementor.createPlayers(numOfPlayers);
         assertEquals(numOfPlayers, CardImplementor.myDecks.size(), "Number of decks should match number of players.");
         assertEquals(numOfPlayers, CardImplementor.myPlayers.size(), "Number of players should match input.");
     }
 
     @Test
     void testShowPlayerDetails() {
-        cardImplementor.createPlayers(numOfPlayers);
+        //cardImplementor.createPlayers(numOfPlayers);
         String playerDetails = cardImplementor.showPlayerDetails(0);
         assertNotNull(playerDetails, "Player details should not be null.");
         assertTrue(playerDetails.contains("Left deck:"), "Player details should include left deck info.");
@@ -80,7 +67,7 @@ public class CardImplTest {
     @Test
     void testShowCardValues() {
         // Arrange
-        cardImplementor.createPlayers(numOfPlayers);
+        //cardImplementor.createPlayers(numOfPlayers);
         String tempCardFile = createTempCardFile();
 
         // Act & Assert
@@ -92,7 +79,7 @@ public class CardImplTest {
 
     @Test
     void testDistributeToPlayers() {
-        cardImplementor.createPlayers(numOfPlayers);
+        //cardImplementor.createPlayers(numOfPlayers);
         cardImplementor.loadCardsFromFile(createTempCardFile(), numOfPlayers);
         cardImplementor.distributeToPlayers(numOfPlayers);
 
@@ -103,7 +90,7 @@ public class CardImplTest {
 
     @Test
     void testDistributeToDecks() {
-        cardImplementor.createPlayers(numOfPlayers);
+        //cardImplementor.createPlayers(numOfPlayers);
         cardImplementor.loadCardsFromFile(createTempCardFile(), numOfPlayers);
         cardImplementor.distributeToDecks(numOfPlayers);
 
@@ -114,7 +101,7 @@ public class CardImplTest {
 
     @Test
     void testShowCardsInDeck() {
-        cardImplementor.createPlayers(numOfPlayers);
+        //cardImplementor.createPlayers(numOfPlayers);
         cardImplementor.loadCardsFromFile(createTempCardFile(), numOfPlayers);
         cardImplementor.distributeToDecks(numOfPlayers);
         assertDoesNotThrow(() -> cardImplementor.showCardsInDeck(0), "showCardsInDeck should not throw any exceptions.");
@@ -122,7 +109,7 @@ public class CardImplTest {
 
     @Test
     void testShowCardsInHand() {
-        cardImplementor.createPlayers(numOfPlayers);
+        //cardImplementor.createPlayers(numOfPlayers);
         cardImplementor.loadCardsFromFile(createTempCardFile(), numOfPlayers);
         cardImplementor.distributeToPlayers(numOfPlayers);
         assertDoesNotThrow(() -> cardImplementor.showCardsInHand(0), "showCardsInHand should not throw any exceptions.");

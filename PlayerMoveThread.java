@@ -72,7 +72,7 @@ public class PlayerMoveThread extends BasicThread  {
 
             if (leftDeck.getSize() != 3) {
                 try {
-                    Thread.sleep(10); // Delay for realism
+                    Thread.sleep(50); // Delay for realism
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt(); // Restore interrupted status
                     break; // Exit the loop if interrupted
@@ -131,6 +131,10 @@ public class PlayerMoveThread extends BasicThread  {
 
     public void addCardToHand(Card card){
         hand.addCard(card);
+    }
+
+    public void clearHand(){
+        hand.clearHand();
     }
 
     public int getPlayerId(){
@@ -261,6 +265,10 @@ public class PlayerMoveThread extends BasicThread  {
         
             // If all cards are null, throw an exception
             throw new IllegalStateException("All cards are null; cannot discard.");
+        }
+
+        public synchronized void clearHand() {
+            cards.clear(); // Remove all cards from the hand
         }
 
     }
