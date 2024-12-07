@@ -7,9 +7,9 @@ import org.junit.jupiter.api.Test;
 
 public class CardTest {
 
+    // Reset the idCounter to 0 before each test to ensure consistent behavior.
     @BeforeEach
     void resetIdCounter() {
-        // Reset the static idCounter to 0 before each test to ensure consistent behavior.
         try {
             var field = Card.class.getDeclaredField("idCounter");
             field.setAccessible(true);

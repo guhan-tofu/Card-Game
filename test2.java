@@ -14,7 +14,7 @@ public class test2 {
         System.out.println(impl.showPlayerDetails(1));
 
         System.out.println("Cards in player 0 :");
-        impl.showCardsInHand(0);
+        impl.showCardsInHand(1);
         System.out.println("Cards in deck 0 :");
         impl.showCardsInDeck(0);
 

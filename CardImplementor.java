@@ -10,11 +10,13 @@ public class CardImplementor implements CardInterface {
     public static ArrayList<PlayerMoveThread> myPlayers = new ArrayList<>();
     private final ArrayList<Card> myCards = new ArrayList<>();
     
-
+    // Function to get the array with all cards used in test case only
     public ArrayList<Card> getMyCards() {
         return myCards;
     }
     
+
+    // Function that creates players then assigns respective decks 
     @Override
     public void createPlayers(int nPlayer) {
 
@@ -48,24 +50,25 @@ public class CardImplementor implements CardInterface {
             try {
                 myPlayers.add(new PlayerMoveThread(leftDeck, rightDeck));  // Try to create a new PlayerMoveThread
             } catch (IOException e) {
-                e.printStackTrace();  // Handle the exception (you can log it or rethrow as needed)
+                e.printStackTrace();  // Handle the exception 
             }
         }
     }
 
+    // Print function to verify the left and right deck of each player
     @Override
     public String showPlayerDetails(int playerId) {
         PlayerMoveThread player = myPlayers.get(playerId);
         Deck leftDeck = player.getLeftDeck();
         Deck rightDeck = player.getRightDeck();
-    
-        // Retrieve and show the indices of the decks in myDecks
+
         int leftDeckIndex = myDecks.indexOf(leftDeck);
         int rightDeckIndex = myDecks.indexOf(rightDeck);
     
         return "Left deck: " + leftDeckIndex + ", Right deck: " + rightDeckIndex;
     }
 
+    // Function to load all cards from a directory of valid txt file
     @Override
     public void loadCardsFromFile(String path, int numofPlayers) {
         myCards.clear();
@@ -99,19 +102,6 @@ public class CardImplementor implements CardInterface {
                     "The file does not contain the required " + (8 * numofPlayers) + " cards. Found: " + tempCards.size());
             }
 
-            // Check if at least one set of 4 cards matches one of the player indices
-            // boolean hasValidRepetitionsForPlayers = false;
-            // for (int playerId = 1; playerId <= numofPlayers; playerId++) { // Loop from 1 to numofPlayers
-            //     if (cardFrequency.getOrDefault(playerId, 0) >= 4) {
-            //         hasValidRepetitionsForPlayers = true;
-            //         break;
-            //     }
-            // }
-
-            // if (!hasValidRepetitionsForPlayers) {
-            //     throw new IllegalArgumentException(
-            //         "The pack is invalid: no card value repeats four or more times for any player index.");
-            // }
 
             myCards.addAll(tempCards); // Add all valid cards to the main card collection
 
@@ -123,7 +113,7 @@ public class CardImplementor implements CardInterface {
     }
 
     
-
+    // Print function to check all card values and their respective Ids
     @Override
     public void showCardValues(){
         for (Card card : myCards) {
@@ -131,6 +121,8 @@ public class CardImplementor implements CardInterface {
         }
     }
 
+
+    // Function to distribute cards to hand of each player in round robin
     @Override
     public void distributeToPlayers(int nPlayer){
         for (int i = 0; i < (4*nPlayer); i++){
@@ -140,6 +132,7 @@ public class CardImplementor implements CardInterface {
         }
     }
    
+    // Function to distribute cards to decks in round robin
     @Override
     public void distributeToDecks(int nPlayer){
         for (int i = 4*nPlayer; i < (8*nPlayer); i++){
@@ -151,14 +144,23 @@ public class CardImplementor implements CardInterface {
 
     @Override        
     public void showCardsInDeck(int deckId){
-        Deck deck = myDecks.get(deckId);
-        deck.showCards();
+        try {
+            Deck deck = myDecks.get(deckId);
+            deck.showCards();
+        } catch (IndexOutOfBoundsException e) {
+            System.err.println("Invalid deck ID: " + deckId + ". Deck does not exist.");
+        }
     }
 
     @Override 
     public void showCardsInHand(int playerId){
-        PlayerMoveThread player = myPlayers.get(playerId);
-        player.showCardsInHand();
+
+        try{
+            PlayerMoveThread player = myPlayers.get(playerId);
+            player.showCardsInHand();
+        }catch (IndexOutOfBoundsException e){
+            System.err.println("Invalid player ID: " + playerId + ". Player does not exist.");
+        }
     }
 
  

@@ -10,13 +10,20 @@ public class DeckTest {
 
     private Deck deck;
 
+
+    // Make a new Deck for test cases
     @BeforeAll
     void setUp() {
         int deckId = 1;
         deck = new Deck(deckId);
     }
 
+    @AfterAll
+    void deleteFiles() {
+        deck.deleteDeckFile("deck2_output.txt");
+    }
 
+    // Clear the deck before every test cases
     @BeforeEach
     void resetUp() {
         deck.clearDeck();
@@ -26,17 +33,15 @@ public class DeckTest {
     @Test
     public void testDeckFileCreation() {
         int deckId = 1;
-        //Deck deck = new Deck(deckId);
         File deckFile = new File("deck"+(deckId+1) + "_output.txt");
 
         assertTrue(deckFile.exists(), "Deck file should be created.");
-        // Clean up the created file after test
         assertTrue(deckFile.delete(), "Deck file should be deleted after test.");
     }
 
     @Test
     public void testAddCardAndSize() {
-        //Deck deck = new Deck(2);
+
         Card card1 = new Card(10);
         Card card2 = new Card(20);
 
@@ -49,7 +54,7 @@ public class DeckTest {
 
     @Test
     public void testDrawCard() {
-        //Deck deck = new Deck(3);
+
         Card card1 = new Card(10);
         Card card2 = new Card(20);
 
@@ -64,8 +69,8 @@ public class DeckTest {
 
     @Test
     public void testWriteAllCardsToFile() throws IOException {
+
         int deckId = 1;
-        //Deck deck = new Deck(deckId);
         Card card1 = new Card(10);
         Card card2 = new Card(20);
 
@@ -90,14 +95,11 @@ public class DeckTest {
         assertTrue(lines.get(0).contains("10") && lines.get(0).contains("20"),
                 "Deck file should contain the values of the added cards.");
 
-        // Clean up the created file after test
-        assertTrue(deckFile.delete(), "Deck file should be deleted after test.");
     }
 
     @Test
     public void testShowCards() {
-        // Arrange
-        //Deck deck = new Deck(87);
+        
         Card card1 = new Card(10);
         Card card2 = new Card(20);
 
@@ -110,10 +112,8 @@ public class DeckTest {
         System.setOut(new PrintStream(outContent));
 
         try {
-            // Act
             deck.showCards();
 
-            // Assert
             String output = outContent.toString().trim().replace("\r\n", "\n");
             String expectedOutput = """
                 card id: 0 card value: 10
@@ -121,7 +121,7 @@ public class DeckTest {
                 """.trim().replace("\r\n", "\n");
             assertEquals(expectedOutput, output, "The output of showCards() does not match the expected output.");
         } finally {
-            // Restore the original system output
+
             System.setOut(originalOut);
         }
     }

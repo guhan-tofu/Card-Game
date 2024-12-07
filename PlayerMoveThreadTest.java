@@ -13,50 +13,52 @@ public class PlayerMoveThreadTest {
 
     private PlayerMoveThread playerMoveThread;
    
+
+    // Creating a player with respective decks assigned for testing
     @BeforeAll
     void setUp() {
         try {
-        // Manually instantiate Deck objects and PlayerMoveThread
+        
         Deck leftDeck = new Deck(10);
         Deck rightDeck = new Deck(11);
         playerMoveThread = new PlayerMoveThread(leftDeck, rightDeck);
         } catch (IOException e) {
-            // Handle the exception (you could log it or fail the test)
+            // Handling the exception 
             fail("IOException occurred while setting up test: " + e.getMessage());
         }
     }
 
+    // Clearing all cards in decks and hand of player before each test case
     @BeforeEach
     void resetPlayerState() {
-        // Reset the player's state (e.g., clear the hand)
+    
         Deck leftDeck = playerMoveThread.getLeftDeck();
         Deck rightDeck = playerMoveThread.getRightDeck();
-        leftDeck.clearDeck();  // Assuming `clearHand` method exists
+        leftDeck.clearDeck();  
         rightDeck.clearDeck();
         playerMoveThread.clearHand();
     }
 
+    // After finishing all test cases deletes the txt file created for the player created
     @AfterAll
     void deleteFiles() {
         playerMoveThread.deletePlayerFile("player1_output.txt");
+        playerMoveThread.deletePlayerFile("player5_output.txt");
         Deck leftDeck = playerMoveThread.getLeftDeck();
         leftDeck.deleteDeckFile("deck11_output.txt");
         Deck rightDeck = playerMoveThread.getRightDeck();
         rightDeck.deleteDeckFile("deck12_output.txt");
-
         
     }
 
 
     @Test
     void testDoBoth() throws IOException {
-        //Deck leftDeck = new Deck(10);
-        //Deck rightDeck = new Deck(11);
-        //playerMoveThread = new PlayerMoveThread(leftDeck, rightDeck);
+        
         Deck leftDeck = playerMoveThread.getLeftDeck();
         Deck rightDeck = playerMoveThread.getRightDeck();
         Card card1 = new Card(9);
-        leftDeck.addCard(card1); // One card added to the left deck
+        leftDeck.addCard(card1); 
         Card card2 = new Card(11);
         playerMoveThread.addCardToHand(card2);
         playerMoveThread.doBoth(1);
@@ -85,34 +87,58 @@ public class PlayerMoveThreadTest {
     }
 
     @Test
-    void testDrawCard() {
-        // Manually create a Card object to simulate drawing a card
-        Card card = new Card(1);  // Card with id 1 and value 5
+    void testDrawCard1() {
+        
+        Card card = new Card(1);  
         Deck leftDeck = playerMoveThread.getLeftDeck();
-        // Simulate the drawing of a card from leftDeck
-        leftDeck.addCard(card);  // Add the card to the left deck
-        playerMoveThread.drawCard();  // Assuming drawCard will move it to the player's hand
+        
+        leftDeck.addCard(card);  
+        playerMoveThread.drawCard();  
 
         // Ensure the card is added to the player's hand
         assertEquals(1, playerMoveThread.getCardValues()[0]);
     }
 
+    @Test
+    void testDrawCard2() {
+    
+        Card card = new Card(1);
+        Card card2 = new Card(2);
+        Deck leftDeck = playerMoveThread.getLeftDeck();
+        
+        leftDeck.addCard(card);  
+        leftDeck.addCard(card2);
+        playerMoveThread.drawCard();  
+        playerMoveThread.drawCard();
+        // Ensure the card is added to the player's hand
+        assertNotEquals(2, playerMoveThread.getCardValues()[0]);
+        assertEquals(2, playerMoveThread.getCardValues()[1]);
+    }
+
     
 
     @Test
-    void testDiscardCard() {
-        // Manually create a Card object
+    void testDiscardCard1() {
+    
         Card card1 = new Card(7);
-        playerMoveThread.addCardToHand(card1);  // Add cards to the hand
-        // Card card2 = new Card(8);
-        // playerMoveThread.addCardToHand(card2);
-        
-        Card card5 = new Card(2);  // Card with id 2 and value 3
-        Deck rightDeck = playerMoveThread.getRightDeck();
-        // Simulate the drawing of a card from leftDeck
-        rightDeck.addCard(card5);   
+        playerMoveThread.addCardToHand(card1);  
         playerMoveThread.discardCard();
+
         assertEquals(0, playerMoveThread.getCardValues()[0]);  // Hand should be empty now
+    }
+
+    @Test
+    void testDiscardCard2() {
+        
+        Card card1 = new Card(7);
+        Card card2 = new Card(8);
+
+        playerMoveThread.addCardToHand(card1); 
+        playerMoveThread.addCardToHand(card2);
+        playerMoveThread.discardCard();
+
+        assertEquals(8, playerMoveThread.getCardValues()[0]);  // Hand should have card with value 8
+        assertNotEquals(7, playerMoveThread.getCardValues()[0]);
     }
 
 
@@ -136,12 +162,13 @@ public class PlayerMoveThreadTest {
 
     @Test
     void testWinningHand() {
-        // Manually create a winning hand (same value cards)
+    
         Card card1 = new Card(2);
         Card card2 = new Card(2);
         Card card3 = new Card(2);
         Card card4 = new Card(2);
-        playerMoveThread.addCardToHand(card1);  // Add cards to the hand
+
+        playerMoveThread.addCardToHand(card1);  
         playerMoveThread.addCardToHand(card2);
         playerMoveThread.addCardToHand(card3);
         playerMoveThread.addCardToHand(card4);
@@ -152,12 +179,32 @@ public class PlayerMoveThreadTest {
     }
 
     @Test
-    void testNotWinningHand() {
+    void testNotWinningHand1() {
+
+        Card card1 = new Card(2);
+        Card card2 = new Card(2);
+        Card card3 = new Card(-2);
+        Card card4 = new Card(2);
+
+        playerMoveThread.addCardToHand(card1); 
+        playerMoveThread.addCardToHand(card2);
+        playerMoveThread.addCardToHand(card3);
+        playerMoveThread.addCardToHand(card4);
+
+
+        // Check if the player has a winning hand
+        assertFalse(playerMoveThread.isWinningHand());
+    }
+
+    @Test
+    void testNotWinningHand2() {
+
         Card card1 = new Card(2);
         Card card2 = new Card(1);
         Card card3 = new Card(2);
         Card card4 = new Card(3);
-        playerMoveThread.addCardToHand(card1);  // Add cards to the hand
+
+        playerMoveThread.addCardToHand(card1); 
         playerMoveThread.addCardToHand(card2);
         playerMoveThread.addCardToHand(card3);
         playerMoveThread.addCardToHand(card4);

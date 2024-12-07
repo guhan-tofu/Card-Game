@@ -5,13 +5,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class PlayerMoveThread extends Thread  { // TRY COPYING DECK CLASS TO MAKE FILES
-
+public class PlayerMoveThread extends Thread  { 
 
     private String fileName;
+
+    // Constructor
     public PlayerMoveThread(Deck leftDeck, Deck rightDeck) throws IOException {
-        // Initialize with a unique file for each player
-        //super("player"+(idCounter+1) + "_output.txt");
         this.fileName = "player"+(idCounter+1) + "_output.txt";
         this.id = idCounter++;
         this.leftDeck = leftDeck;
@@ -20,13 +19,13 @@ public class PlayerMoveThread extends Thread  { // TRY COPYING DECK CLASS TO MAK
         
     }
 
+    // Function to create file for every player
     private void createPlayerFile() {
         try {
             File playerFile = new File(fileName);
 
             // Check if the file already exists
             if (playerFile.exists()) {
-                // Clear the file by opening it in write mode (this overwrites it)
                 try (FileWriter writer = new FileWriter(playerFile)) {
                     writer.write(""); // Write an empty string to clear the file
                     System.out.println("File cleared: " + playerFile.getName());
@@ -45,7 +44,7 @@ public class PlayerMoveThread extends Thread  { // TRY COPYING DECK CLASS TO MAK
         }
     }
 
-
+    // Function used to delete any player file only used in test case
     public void deletePlayerFile(String path) {
         File file = new File(path);
         System.out.println("Attempting to delete file: " + file.getAbsolutePath());
@@ -101,7 +100,7 @@ public class PlayerMoveThread extends Thread  { // TRY COPYING DECK CLASS TO MAK
                                 e.printStackTrace();
                             }
                         for (PlayerMoveThread player : CardImplementor.myPlayers){
-                            if (player.id != this.id) { // Exclude the current (winning) player
+                            if (player.id != this.id) { // Exclude the current winning player
                                 String finalHand = player.hand.getCardsInHand();
                                 try (FileWriter writer = new FileWriter("player"+Integer.toString(player.id + 1) + "_output.txt", true)) {
                                     writer.write("player " + (this.id + 1) + " has informed player " + (player.id + 1) + " that player " + (this.id + 1) + " has won\n");
@@ -113,7 +112,9 @@ public class PlayerMoveThread extends Thread  { // TRY COPYING DECK CLASS TO MAK
                             }
                         }
                         System.out.println("Player " + (id + 1) + " has won!");
-                     
+                        for(Deck decks : CardImplementor.myDecks){
+                            decks.writeAllCardsToFile();
+                        }
                       
                         
                     }
@@ -122,20 +123,20 @@ public class PlayerMoveThread extends Thread  { // TRY COPYING DECK CLASS TO MAK
             }
 
             if (leftDeck.getSize() != 3) {
-                try {
-                    Thread.sleep(50); // Delay for realism
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt(); // Restore interrupted status
-                    break; // Exit the loop if interrupted
-                }
+                // try {
+                //     Thread.sleep(50); // Delay for realism
+                // } catch (InterruptedException e) {
+                //     Thread.currentThread().interrupt(); // Restore interrupted status
+                //     break; // Exit the loop if interrupted
+                // }
 
-                // Exit if game is over to avoid unnecessary work
-                if (gameOver) {
-                    for(Deck decks : CardImplementor.myDecks){
-                        decks.writeAllCardsToFile();
-                    }
-                    break;
-                }
+                // // Exit if game is over to avoid unnecessary work
+                // if (gameOver) {
+                //     for(Deck decks : CardImplementor.myDecks){
+                //         decks.writeAllCardsToFile();
+                //     }
+                //     break;
+                // }
 
                 doBoth(id+1); // Perform card operations
             }
@@ -143,18 +144,19 @@ public class PlayerMoveThread extends Thread  { // TRY COPYING DECK CLASS TO MAK
         // Thread naturally exits here
     }
 
+
+    // Function that Draws and Discards a card (Atomic)
     public synchronized void doBoth(int idnum){
         
         Card cardToDraw = leftDeck.drawCard();
         int leftDeckIndex = CardImplementor.myDecks.indexOf(leftDeck);
         int rightDeckIndex = CardImplementor.myDecks.indexOf(rightDeck);
         System.out.println("Card to Draw : "+cardToDraw);
-        hand.addCard(cardToDraw);
-        // add thread writing here 
+        hand.addCard(cardToDraw); 
         Card cardToDiscard = hand.discardCard();
         System.out.println("Card to Discard : "+ cardToDiscard);
         rightDeck.addCard(cardToDiscard);
-        // add thread writing here
+        // Write to player file what card has been drawn and discarded
         try (FileWriter writer = new FileWriter("player"+Integer.toString(idnum)+"_output.txt", true)) { // true for append mode
         writer.write("player " + Integer.toString(idnum)+  " draws a " +cardToDraw+ " from deck "+leftDeckIndex + "\n");
         writer.write("player " + Integer.toString(idnum)+  " discards a " +cardToDiscard+ " to deck "+rightDeckIndex + "\n");
@@ -166,6 +168,7 @@ public class PlayerMoveThread extends Thread  { // TRY COPYING DECK CLASS TO MAK
         
     }
 
+    // Function to draw Card
     public synchronized void drawCard() {
         Card cardToDraw = leftDeck.drawCard();
         if (cardToDraw != null) {
@@ -175,6 +178,7 @@ public class PlayerMoveThread extends Thread  { // TRY COPYING DECK CLASS TO MAK
         }
     }
 
+    // Function to discard Card
     public synchronized void discardCard() {
         Card cardToDiscard = hand.discardCard();
         rightDeck.addCard(cardToDiscard);
@@ -208,11 +212,13 @@ public class PlayerMoveThread extends Thread  { // TRY COPYING DECK CLASS TO MAK
         hand.setChecker();
     }
 
-
+    // Nested Hand Class
     private class Hand {
         private volatile List<Card> cards = new ArrayList<>();
         private volatile boolean checker = false;
-        public void addCard(Card card) {//id of card instead
+
+        // Function to add card to hand
+        public void addCard(Card card) {
             cards.add(card);
         }
 
@@ -220,8 +226,9 @@ public class PlayerMoveThread extends Thread  { // TRY COPYING DECK CLASS TO MAK
             checker = true;
         }
 
+        // Function to get all cards in hand
         public int[] getCardValues() {
-            int[] cards4 = new int[4];
+            int[] cards4 = new int[4]; // hand has 4 cards
             int index = 0; // Track the position to insert into the array
         
             for (Card card : cards) {
@@ -237,7 +244,7 @@ public class PlayerMoveThread extends Thread  { // TRY COPYING DECK CLASS TO MAK
             return cards4;
         }
         
-
+        // Function that returns true if player has a winning hand
         public synchronized boolean isWinningHand() {
             if (cards.isEmpty()) {
                 return false; // A hand with no cards cannot be a winning hand
@@ -245,7 +252,7 @@ public class PlayerMoveThread extends Thread  { // TRY COPYING DECK CLASS TO MAK
         
             Card firstCard = null;
         
-            // Find the first non-null card
+            // Find the first non null card
             for (Card card : cards) {
                 if (card != null) {
                     firstCard = card;
@@ -259,16 +266,18 @@ public class PlayerMoveThread extends Thread  { // TRY COPYING DECK CLASS TO MAK
         
             int firstValue = firstCard.getValue();
         
-            // Check if all non-null cards have the same value
+            // Check if all non null cards have the same value
             for (Card card : cards) {
                 if (card != null && card.getValue() != firstValue) {
                     return false; // Not a winning hand if values differ
                 }
             }
         
-            return true; // All non-null cards have the same value
+            return true; 
         }
 
+
+        // Print funtion to show every card in hand and it's Id
         public void showCardsInHand(){
             for (Card card : cards){
                 if (card != null) {
@@ -286,7 +295,7 @@ public class PlayerMoveThread extends Thread  { // TRY COPYING DECK CLASS TO MAK
             return sb.toString().trim(); // Remove trailing space
         }
 
-
+        // Function to remove a card from hand
         public synchronized Card discardCard() {
             int playerId = (getPlayerId()+1); // Use the player's ID as the preferred card value
 

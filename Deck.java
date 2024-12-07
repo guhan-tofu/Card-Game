@@ -4,16 +4,18 @@ import java.io.IOException;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class Deck {
-    private ConcurrentLinkedQueue<Card> cards = new ConcurrentLinkedQueue<>();
+    private ConcurrentLinkedQueue<Card> cards = new ConcurrentLinkedQueue<>(); // Thread safe
     private String fileName;
 
-    // Constructor
+
     public Deck(int deckId) {
         // Assign a unique file name based on the deck ID
         this.fileName = "deck"+(deckId+1) + "_output.txt";
         createDeckFile();
     }
 
+
+    // Function to create a file for a deck
     private void createDeckFile() {
         try {
             File deckFile = new File(fileName);
@@ -29,15 +31,15 @@ public class Deck {
     }
 
     public void addCard(Card card) {
-        cards.add(card);  // No need to synchronize
+        cards.add(card);  
     }
 
     public Card drawCard() {
-        return cards.poll();  // No need to synchronize
+        return cards.poll();  
     }
 
     public int getSize() {
-        return cards.size();  // No need to synchronize
+        return cards.size();  
     }
 
     public void clearDeck() {
@@ -52,6 +54,8 @@ public class Deck {
         }
     }
 
+
+    // Function to delete file used in test cases only
     public void deleteDeckFile(String path){
 
         File file = new File(path);
@@ -63,19 +67,18 @@ public class Deck {
         }
     }
 
+    // Function to write all cards in deck to respective file
     public void writeAllCardsToFile() {
         try (FileWriter writer = new FileWriter(fileName)) {
-            // Start with the deck name
+           
             writer.write(fileName + " contents: ");
             
-            // Append each card's value to the line
             for (Card card : cards) {
                 if (card != null) {
                     writer.write(card.getValue() + " ");
                 }
             }
     
-            // Add a newline at the end of the file
             writer.write("\n");
     
         } catch (IOException e) {

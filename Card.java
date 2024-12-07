@@ -3,10 +3,12 @@ public class Card{
     private static int idCounter = 0;
     private int id;
     
+    // Function to reset counter used in test case only
     public static void resetCardCounter() {
         idCounter = 0;
     }
-
+    
+    // Constructor
     public Card(int value){
         this.value = value;
         this.id = idCounter++;
