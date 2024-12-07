@@ -1,20 +1,71 @@
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class PlayerMoveThread extends BasicThread  {
+public class PlayerMoveThread extends Thread  { // TRY COPYING DECK CLASS TO MAKE FILES
 
+
+    private String fileName;
     public PlayerMoveThread(Deck leftDeck, Deck rightDeck) throws IOException {
         // Initialize with a unique file for each player
-        super("player"+(idCounter+1) + "_output.txt");
+        //super("player"+(idCounter+1) + "_output.txt");
+        this.fileName = "player"+(idCounter+1) + "_output.txt";
         this.id = idCounter++;
         this.leftDeck = leftDeck;
         this.rightDeck = rightDeck;
+        createPlayerFile();
         
     }
 
+    private void createPlayerFile() {
+        try {
+            File playerFile = new File(fileName);
+
+            // Check if the file already exists
+            if (playerFile.exists()) {
+                // Clear the file by opening it in write mode (this overwrites it)
+                try (FileWriter writer = new FileWriter(playerFile)) {
+                    writer.write(""); // Write an empty string to clear the file
+                    System.out.println("File cleared: " + playerFile.getName());
+                }
+            } else {
+                // If file doesn't exist, create a new one
+                if (playerFile.createNewFile()) {
+                    System.out.println("File created: " + playerFile.getName());
+                } else {
+                    System.err.println("Failed to create file: " + playerFile.getName());
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("Error creating or clearing file for deck: " + fileName);
+            e.printStackTrace();
+        }
+    }
+
+
+    public void deletePlayerFile(String path) {
+        File file = new File(path);
+        System.out.println("Attempting to delete file: " + file.getAbsolutePath());
+    
+        if (file.exists()) {
+            // Ensure the file is writable
+            if (!file.setWritable(true)) {
+                System.err.println("Failed to make the file writable: " + path);
+            }
+    
+            // Attempt to delete the file
+            if (file.delete()) {
+                System.out.println("Successfully deleted the file: " + path);
+            } else {
+                System.err.println("Failed to delete the file: " + path);
+            }
+        } else {
+            System.err.println("File does not exist: " + path);
+        }
+    }
 
 
     private static int idCounter = 0;

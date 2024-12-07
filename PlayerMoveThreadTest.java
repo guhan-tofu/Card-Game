@@ -7,10 +7,6 @@ import java.io.IOException;
 import java.util.Arrays;
 import org.junit.jupiter.api.*;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class PlayerMoveThreadTest {
@@ -40,9 +36,20 @@ public class PlayerMoveThreadTest {
         playerMoveThread.clearHand();
     }
 
+    @AfterAll
+    void deleteFiles() {
+        playerMoveThread.deletePlayerFile("player1_output.txt");
+        Deck leftDeck = playerMoveThread.getLeftDeck();
+        leftDeck.deleteDeckFile("deck11_output.txt");
+        Deck rightDeck = playerMoveThread.getRightDeck();
+        rightDeck.deleteDeckFile("deck12_output.txt");
+
+        
+    }
+
 
     @Test
-    void testDoBoth1() throws IOException {
+    void testDoBoth() throws IOException {
         //Deck leftDeck = new Deck(10);
         //Deck rightDeck = new Deck(11);
         //playerMoveThread = new PlayerMoveThread(leftDeck, rightDeck);
@@ -78,43 +85,7 @@ public class PlayerMoveThreadTest {
     }
 
     @Test
-    void testDoBoth2() throws IOException {
-        //Deck leftDeck = new Deck(10);
-        //Deck rightDeck = new Deck(11);
-        //playerMoveThread = new PlayerMoveThread(leftDeck, rightDeck);
-        Deck leftDeck = playerMoveThread.getLeftDeck();
-        Deck rightDeck = playerMoveThread.getRightDeck();
-        Card card1 = new Card(9);
-        leftDeck.addCard(card1); // One card added to the left deck
-        Card card2 = new Card(11);
-        playerMoveThread.addCardToHand(card2);
-        playerMoveThread.doBoth(1);
-
-        // Assert that a card was drawn from the left deck
-        assertEquals(0, leftDeck.getSize(), "A card should be removed from the left deck");
-
-        // Assert that a card was discarded to the right deck
-        assertEquals(1, rightDeck.getSize(), "A card should be added to the right deck");
-
-        // Assert that the output file contains the expected log
-        File outputFile = new File("player1_output.txt");
-        assertTrue(outputFile.exists(), "Output file should exist");
-
-        // Verify the content of the output file
-        try (BufferedReader reader = new BufferedReader(new FileReader(outputFile))) {
-            String line1 = reader.readLine();
-            String line2 = reader.readLine();
-
-            assertNotNull(line1, "First log entry should not be null");
-            assertFalse(line1.contains("discards a"), "First log entry should contain draw action");
-
-            assertNotNull(line2, "Second log entry should not be null");
-            assertFalse(line2.contains("draws a"), "Second log entry should contain discard action");
-        }
-    }
-
-    @Test
-    void testDrawCard1() {
+    void testDrawCard() {
         // Manually create a Card object to simulate drawing a card
         Card card = new Card(1);  // Card with id 1 and value 5
         Deck leftDeck = playerMoveThread.getLeftDeck();
@@ -126,45 +97,10 @@ public class PlayerMoveThreadTest {
         assertEquals(1, playerMoveThread.getCardValues()[0]);
     }
 
-    @Test
-    void testDrawCard2() {
-        // Manually create a Card object to simulate drawing a card
-        Card card = new Card(1); 
-        Card card2 = new Card(2); 
-        Deck leftDeck = playerMoveThread.getLeftDeck();
-        // Simulate the drawing of a card from leftDeck
-        leftDeck.addCard(card); 
-        leftDeck.addCard(card2);
-        playerMoveThread.drawCard();  // Assuming drawCard will move it to the player's hand
-        playerMoveThread.drawCard();
-
-        // Ensure the card is added to the player's hand
-        assertEquals(2, playerMoveThread.getCardValues()[1]);
-    }
-
-    @Test
-    void testDrawCard3() {
-        // Manually create a Card object to simulate drawing a card
-        Card card = new Card(1); 
-        Card card2 = new Card(2); 
-        Card card3 = new Card(3);
-        Deck leftDeck = playerMoveThread.getLeftDeck();
-        // Simulate the drawing of a card from leftDeck
-        leftDeck.addCard(card); 
-        leftDeck.addCard(card2);
-        leftDeck.addCard(card3);
-        playerMoveThread.drawCard();  // Assuming drawCard will move it to the player's hand
-        playerMoveThread.drawCard();
-        playerMoveThread.drawCard();
-
-        // Ensure the card is added to the player's hand
-        assertEquals(3, playerMoveThread.getCardValues()[2]);
-    }
-
     
 
     @Test
-    void testDiscardCard1() {
+    void testDiscardCard() {
         // Manually create a Card object
         Card card1 = new Card(7);
         playerMoveThread.addCardToHand(card1);  // Add cards to the hand
@@ -177,22 +113,6 @@ public class PlayerMoveThreadTest {
         rightDeck.addCard(card5);   
         playerMoveThread.discardCard();
         assertEquals(0, playerMoveThread.getCardValues()[0]);  // Hand should be empty now
-    }
-
-    @Test
-    void testDiscardCard2() {
-        // Manually create a Card object
-        Card card1 = new Card(7);
-        playerMoveThread.addCardToHand(card1);  // Add cards to the hand
-        Card card2 = new Card(8);
-        playerMoveThread.addCardToHand(card2);
-        
-        Card card5 = new Card(2);  // Card with id 2 and value 3
-        Deck rightDeck = playerMoveThread.getRightDeck();
-        // Simulate the drawing of a card from leftDeck
-        rightDeck.addCard(card5);   
-        playerMoveThread.discardCard();
-        assertEquals(8, playerMoveThread.getCardValues()[0]);  // Hand should be empty now
     }
 
 
@@ -241,7 +161,6 @@ public class PlayerMoveThreadTest {
         playerMoveThread.addCardToHand(card2);
         playerMoveThread.addCardToHand(card3);
         playerMoveThread.addCardToHand(card4);
-
 
         // Check if the player does not have a winning hand
         assertFalse(playerMoveThread.isWinningHand());

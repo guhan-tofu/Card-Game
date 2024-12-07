@@ -12,14 +12,33 @@ public class CardImplTest {
 
     private CardImplementor cardImplementor;
     private final int numOfPlayers = 4;
-
+    private PlayerMoveThread playerMoveThread;
 
     @BeforeAll
     void setUp() {
         cardImplementor = new CardImplementor();
         cardImplementor.createPlayers(numOfPlayers);
+        playerMoveThread = CardImplementor.myPlayers.get(1);
     }
 
+    @AfterAll
+    void deleteFiles() {
+        playerMoveThread.deletePlayerFile("player1_output.txt");
+        playerMoveThread.deletePlayerFile("player2_output.txt");
+        playerMoveThread.deletePlayerFile("player3_output.txt");
+        playerMoveThread.deletePlayerFile("player4_output.txt");
+        playerMoveThread.deletePlayerFile("player5_output.txt");
+        Deck leftDeck = playerMoveThread.getLeftDeck();
+        leftDeck.deleteDeckFile("deck1_output.txt");
+        Deck rightDeck = playerMoveThread.getRightDeck();
+        rightDeck.deleteDeckFile("deck2_output.txt");
+        Deck leftDeck1 = playerMoveThread.getLeftDeck();
+        leftDeck1.deleteDeckFile("deck3_output.txt");
+        Deck rightDeck1 = playerMoveThread.getRightDeck();
+        rightDeck1.deleteDeckFile("deck4_output.txt");
+
+        
+    }
 
 
     @Test

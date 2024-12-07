@@ -52,6 +52,17 @@ public class Deck {
         }
     }
 
+    public void deleteDeckFile(String path){
+
+        File file = new File(path);
+
+        if (file.delete()) {
+            System.out.println("File deleted successfully.");
+        } else {
+            System.out.println("Failed to delete the file. File may not exist.");
+        }
+    }
+
     public void writeAllCardsToFile() {
         try (FileWriter writer = new FileWriter(fileName)) {
             // Start with the deck name
