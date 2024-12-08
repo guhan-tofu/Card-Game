@@ -30,6 +30,10 @@ public class CardImplTest {
         playerMoveThread.deletePlayerFile("player3_output.txt");
         playerMoveThread.deletePlayerFile("player4_output.txt");
         playerMoveThread.deletePlayerFile("player5_output.txt");
+        playerMoveThread.deletePlayerFile("player6_output.txt");
+        playerMoveThread.deletePlayerFile("player7_output.txt");
+        playerMoveThread.deletePlayerFile("player8_output.txt");
+        playerMoveThread.deletePlayerFile("player9_output.txt");
         
         Deck leftDeck = playerMoveThread.getLeftDeck();
         leftDeck.deleteDeckFile("deck1_output.txt");
