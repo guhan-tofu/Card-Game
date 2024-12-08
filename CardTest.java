@@ -19,6 +19,7 @@ public class CardTest {
         }
     }
 
+    //Check if the constructor gives correct value and ID for the card
     @Test
     public void testConstructor() {
         Card card = new Card(10);
@@ -26,18 +27,21 @@ public class CardTest {
         assertEquals("Card ID should start at 0 for the first instance.", 0, card.getId());
     }
 
+    //Check if the value getter gives correct value
     @Test
     public void testGetValue() {
         Card card = new Card(5);
         assertEquals("getValue() should return the correct card value.", 5, card.getValue());
     }
 
+    //Check if the value getter gives incorrect value
     @Test
     public void testDontGetValue() {
         Card card = new Card(5);
         assertNotEquals("getValue() should not return the incorrect card value.", 6, card.getValue());
     }
 
+    //Check if the ID getter gives correct ID
     @Test
     public void testGetId() {
         Card card1 = new Card(3);
@@ -46,12 +50,14 @@ public class CardTest {
         assertEquals("Second card ID should be 1.", 1, card2.getId());
     }
 
+    //Check if the toString method correctly outputs value as a String
     @Test
     public void testToString() {
         Card card = new Card(42);
         assertEquals("toString() should return the string representation of the card value.", "42", card.toString());
     }
 
+    //Check if cards each have a unique ID
     @Test
     public void testUniqueIds() {
         Card card1 = new Card(10);

@@ -12,12 +12,12 @@ public class CardGame {
         while (true) {
             try {
                 System.out.print("Enter the number of players: ");
-                numberOfPlayers = Integer.parseInt(scanner.nextLine());
+                numberOfPlayers = Integer.parseInt(scanner.nextLine()); //Turns user input String into an integer.
                 if (numberOfPlayers < 2) {
                     throw new IllegalArgumentException("There must be at least 2 players.");
                 }
                 System.out.print("Enter the path to the pack.txt file without quotation marks: ");
-                filePath = scanner.nextLine();
+                filePath = scanner.nextLine(); //Turns user input String into a file path
                 File file = new File(filePath);
                 if (!file.exists() || !file.canRead()) {
                     throw new IllegalArgumentException("File does not exist or cannot be read. Please check the path and try again.");
@@ -47,10 +47,3 @@ public class CardGame {
     }
 }
 
-//modify loadCardsFromFile -- validate pack and load path/directory
-//actual executable
-//clean up
-//comments
-//error handling
-//jUnit
-// readME

@@ -51,6 +51,7 @@ public class PlayerMoveThreadTest {
         rightDeck.deleteDeckFile("deck12_output.txt");
     }
 
+    //Test for doBoth method
     @Test
     public void testDoBoth() throws IOException {
         Deck leftDeck = playerMoveThread.getLeftDeck();
@@ -84,6 +85,7 @@ public class PlayerMoveThreadTest {
         }
     }
 
+    //Checks if the card is drawn to the hand of the player
     @Test
     public void testDrawCard1() {
         Card card = new Card(1);
@@ -96,6 +98,7 @@ public class PlayerMoveThreadTest {
         assertEquals(1, playerMoveThread.getCardValues()[0]);
     }
 
+    //Checks if the cards are drawn to the hand of the player
     @Test
     public void testDrawCard2() {
         Card card = new Card(1);
@@ -112,6 +115,7 @@ public class PlayerMoveThreadTest {
         assertEquals(2, playerMoveThread.getCardValues()[1]);
     }
 
+    //Check if the discardCard properly discards the card from the hand to the rightDeck 
     @Test
     public void testDiscardCard1() {
         Card card1 = new Card(7);
@@ -123,6 +127,7 @@ public class PlayerMoveThreadTest {
         assertEquals(0, playerMoveThread.getCardValues()[0]);
     }
 
+    //Check if the discardCard properly discards the first card from the hand to the rightDeck 
     @Test
     public void testDiscardCard2() {
         Card card1 = new Card(7);
@@ -136,6 +141,7 @@ public class PlayerMoveThreadTest {
         assertNotEquals(7, playerMoveThread.getCardValues()[0]);
     }
 
+    //Check if the discardCard properly discards the cards from the hand to the rightDeck 
     @Test
     public void testDiscardCard3() {
         Card card1 = new Card(7);
@@ -151,6 +157,7 @@ public class PlayerMoveThreadTest {
         assertEquals(0, playerMoveThread.getCardValues()[0]);
     }
 
+    //Checks if the cards are correctly added to the hand and if the values are also correct
     @Test
     public void testAddCardToHand() {
         Card card1 = new Card(2);
@@ -167,6 +174,7 @@ public class PlayerMoveThreadTest {
         assertFalse(Arrays.equals(new int[]{2, 2, 4}, handSlice));
     }
 
+    //Check if the isWinningHand correctly returns True in case of a win
     @Test
     public void testWinningHand() {
         Card card1 = new Card(2);
@@ -182,6 +190,7 @@ public class PlayerMoveThreadTest {
         assertTrue(playerMoveThread.isWinningHand());
     }
 
+    //Check if the isWinningHand is still False in case of negative numbers
     @Test
     public void testNotWinningHand1() {
         Card card1 = new Card(2);
@@ -197,6 +206,7 @@ public class PlayerMoveThreadTest {
         assertFalse(playerMoveThread.isWinningHand());
     }
 
+    //Check if the isWinningHand is kept False in case of a not winning hand
     @Test
     public void testNotWinningHand2() {
         Card card1 = new Card(2);

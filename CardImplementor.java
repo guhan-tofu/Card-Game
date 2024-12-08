@@ -48,7 +48,7 @@ public class CardImplementor implements CardInterface {
             }
     
             try {
-                myPlayers.add(new PlayerMoveThread(leftDeck, rightDeck));  // Try to create a new PlayerMoveThread
+                myPlayers.add(new PlayerMoveThread(leftDeck, rightDeck));  // Add the player to the myPlayers array
             } catch (IOException e) {
                 e.printStackTrace();  // Handle the exception 
             }
@@ -68,7 +68,7 @@ public class CardImplementor implements CardInterface {
         return "Left deck: " + leftDeckIndex + ", Right deck: " + rightDeckIndex;
     }
 
-    // Function to load all cards from a directory of valid txt file
+    // Function to load all cards from a directory of valid .txt file
     @Override
     public void loadCardsFromFile(String path, int numofPlayers) {
         myCards.clear();
@@ -142,6 +142,7 @@ public class CardImplementor implements CardInterface {
         }
     }
 
+    // Print function to check all the cards in the deck
     @Override        
     public void showCardsInDeck(int deckId){
         try {
@@ -152,6 +153,7 @@ public class CardImplementor implements CardInterface {
         }
     }
 
+    // Print function to check all the cards in the hand of the player
     @Override 
     public void showCardsInHand(int playerId){
 

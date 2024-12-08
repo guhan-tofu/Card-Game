@@ -30,6 +30,7 @@ public class Deck {
         }
     }
 
+    //Getters and Setters 
     public void addCard(Card card) {
         cards.add(card);  
     }
@@ -42,10 +43,12 @@ public class Deck {
         return cards.size();  
     }
 
+    //Clear the deck from the cards
     public void clearDeck() {
         cards.clear();
     }
 
+    //Print method to see cards currently in the deck
     public void showCards() {
         for (Card card : cards) {
             if (card != null) {
@@ -55,7 +58,7 @@ public class Deck {
     }
 
 
-    // Function to delete file used in test cases only
+    // Function to delete file, used in test cases only
     public void deleteDeckFile(String path){
 
         File file = new File(path);
@@ -67,7 +70,7 @@ public class Deck {
         }
     }
 
-    // Function to write all cards in deck to respective file
+    // Function to write all cards in the deck to respective file
     public void writeAllCardsToFile() {
         try (FileWriter writer = new FileWriter(fileName)) {
            

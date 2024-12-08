@@ -35,6 +35,7 @@ public class DeckTest {
         deck.deleteDeckFile("deck2_output.txt");
     }
 
+    //Checks if the deck file is created
     @Test
     public void testDeckFileCreation() {
         int deckId = 1;
@@ -44,6 +45,7 @@ public class DeckTest {
         assertTrue("Deck file should be deleted after test.", deckFile.delete());
     }
 
+    //Checks if the deck size is correct after being assigned cards
     @Test
     public void testAddCardAndSize1() {
 
@@ -57,6 +59,7 @@ public class DeckTest {
         assertNotEquals("Deck size should not be 3 after adding two cards.", 3, deck.getSize());
     }
 
+    //Checks if the deck size is correct after being assigned more cards
     @Test
     public void testAddCardAndSize2() {
 
@@ -74,6 +77,7 @@ public class DeckTest {
         assertNotEquals("Deck size should not be 2 after adding four cards.", 2, deck.getSize());
     }
 
+    //Check if the drawCard follows the FIFO
     @Test
     public void testDrawCard1() {
 
@@ -89,6 +93,7 @@ public class DeckTest {
         assertEquals("Deck size should be 1 after drawing a card.", 1, deck.getSize());
     }
 
+    //Check if the drawCard follows the FIFO
     @Test
     public void testDrawCard2() {
 
@@ -109,6 +114,7 @@ public class DeckTest {
         assertEquals("Deck size should be 2 after drawing a card.", 2, deck.getSize());
     }
 
+    //Checks if the file contains the values of added cards
     @Test
     public void testWriteAllCardsToFile() throws IOException {
 
@@ -137,6 +143,7 @@ public class DeckTest {
         assertTrue("Deck file should contain the values of the added cards.", lines.get(0).contains("10") && lines.get(0).contains("20"));
     }
 
+    //Checks if the showCards method prints the expected message
     @Test
     public void testShowCards() {
 

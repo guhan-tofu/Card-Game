@@ -48,12 +48,14 @@ public class CardImplTest {
         rightDeck1.deleteDeckFile("deck4_output.txt");
     }
 
+    //Check if the number of players in the argument matches the number of decks and players created 
     @Test
     public void testCreatePlayers() {
         assertEquals("Number of decks should match number of players.", numOfPlayers, CardImplementor.myDecks.size());
         assertEquals("Number of players should match input.", numOfPlayers, CardImplementor.myPlayers.size());
     }
 
+    //Check if the showPlayerDetails shows the correct String output
     @Test
     public void testShowPlayerDetails1() {
         String playerDetails = cardImplementor.showPlayerDetails(0);
@@ -62,12 +64,14 @@ public class CardImplTest {
         assertTrue("Player details should include right deck info.", playerDetails.contains("Right deck:"));
     }
 
+    //Check if the showPlayerDetails is not empty
     @Test
     public void testShowPlayerDetails2() {
         String playerDetails = cardImplementor.showPlayerDetails(0);
         assertNotNull("Player details should not be null.", playerDetails);
     }
 
+    //Checks if the number of cards loaded matches the number of cards in the .txt file
     @Test
     public void testLoadCardsFromFile() throws IOException {
         // Create a temporary file with valid card values
@@ -95,6 +99,7 @@ public class CardImplTest {
         assertEquals("Loaded card count should match expected count.", 8 * numOfPlayers, myCards.size());
     }
 
+    //Check if the loadCardsFromFile and showCardValues run without throwing wrong exceptions
     @Test
     public void testShowCardValues() {
         String tempCardFile = createTempCardFile();
@@ -108,6 +113,7 @@ public class CardImplTest {
         }
     }
 
+    //Checks if each player contains correct number of cards
     @Test
     public void testDistributeToPlayers() {
         cardImplementor.loadCardsFromFile(createTempCardFile(), numOfPlayers);
@@ -118,6 +124,7 @@ public class CardImplTest {
         }
     }
 
+    //Checks if each deck contains correct number of cards
     @Test
     public void testDistributeToDecks() {
         cardImplementor.loadCardsFromFile(createTempCardFile(), numOfPlayers);
@@ -128,6 +135,7 @@ public class CardImplTest {
         }
     }
 
+    //Check if showCardsInDeck runs without throwing wrong exceptions
     @Test
     public void testShowCardsInDeck1() {
         cardImplementor.loadCardsFromFile(createTempCardFile(), numOfPlayers);
@@ -139,6 +147,7 @@ public class CardImplTest {
         }
     }
 
+    //Check if the showCardsInDeck throws unexpected exceptions in edge-cases
     @Test
     public void testShowCardsInDeck2() {
         cardImplementor.loadCardsFromFile(createTempCardFile(), numOfPlayers);
@@ -151,6 +160,7 @@ public class CardImplTest {
         }
     }
 
+    //Check if showCardsInHand runs without throwing wrong exceptions
     @Test
     public void testShowCardsInHand1() {
         cardImplementor.loadCardsFromFile(createTempCardFile(), numOfPlayers);
@@ -162,6 +172,7 @@ public class CardImplTest {
         }
     }
 
+    //Check if the showCardsInHand throws unexpected exceptions in edge-cases
     @Test
     public void testShowCardsInHand2() {
         cardImplementor.loadCardsFromFile(createTempCardFile(), numOfPlayers);
@@ -174,6 +185,8 @@ public class CardImplTest {
         }
     }
 
+
+    //Unique to this class test method to create a temporary .txt file for cards
     private String createTempCardFile() {
         try {
             Path tempFile = Files.createTempFile("cards", ".txt");

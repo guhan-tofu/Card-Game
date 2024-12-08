@@ -2,7 +2,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class PlayerMoveThread extends Thread  { 
@@ -74,7 +73,7 @@ public class PlayerMoveThread extends Thread  {
     private final Hand hand = new Hand();
     private static volatile boolean gameOver = false;
     
-
+    //Getters and Setters for the player class
     public Deck getLeftDeck(){
         return this.leftDeck;
     }
@@ -82,6 +81,8 @@ public class PlayerMoveThread extends Thread  {
     public Deck getRightDeck(){
         return this.rightDeck;
     }
+
+    //Instance of the CardImplementor class to retrieve static fields
     CardImplementor imple = new CardImplementor();
 
     @Override
@@ -170,6 +171,7 @@ public class PlayerMoveThread extends Thread  {
         rightDeck.addCard(cardToDiscard);
     }
 
+    //Methods to work with the nested class Hand
     public void addCardToHand(Card card){
         hand.addCard(card);
     }
@@ -271,6 +273,7 @@ public class PlayerMoveThread extends Thread  {
             }}
         }
 
+        //Print function to return the cards in hand as a String
         public String getCardsInHand() {
             StringBuilder sb = new StringBuilder();
             for (Card card : cards) {
