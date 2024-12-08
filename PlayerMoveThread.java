@@ -123,21 +123,7 @@ public class PlayerMoveThread extends Thread  {
             }
 
             if (leftDeck.getSize() != 3) {
-                // try {
-                //     Thread.sleep(50); // Delay for realism
-                // } catch (InterruptedException e) {
-                //     Thread.currentThread().interrupt(); // Restore interrupted status
-                //     break; // Exit the loop if interrupted
-                // }
-
-                // // Exit if game is over to avoid unnecessary work
-                // if (gameOver) {
-                //     for(Deck decks : CardImplementor.myDecks){
-                //         decks.writeAllCardsToFile();
-                //     }
-                //     break;
-                // }
-
+                
                 doBoth(id+1); // Perform card operations
             }
         }

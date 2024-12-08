@@ -13,7 +13,7 @@ public class Card{
         this.value = value;
         this.id = idCounter++;
     }
-
+    
     public int getValue(){
         return value;
     }
