@@ -1,218 +1,214 @@
-import static org.junit.jupiter.api.Assertions.*;
+
+
+import static org.junit.Assert.*;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Arrays;
-import org.junit.jupiter.api.*;
+import org.junit.Before;
+import org.junit.After;
+import org.junit.BeforeClass;
+import org.junit.AfterClass;
+import org.junit.Test;
 
-
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class PlayerMoveThreadTest {
 
-    private PlayerMoveThread playerMoveThread;
-   
+    private static PlayerMoveThread playerMoveThread;
 
     // Creating a player with respective decks assigned for testing
-    @BeforeAll
-    void setUp() {
+    @BeforeClass
+    public static void setUpBeforeClass() {
         try {
-        
-        Deck leftDeck = new Deck(10);
-        Deck rightDeck = new Deck(11);
-        playerMoveThread = new PlayerMoveThread(leftDeck, rightDeck);
+            Deck leftDeck = new Deck(10);
+            Deck rightDeck = new Deck(11);
+            playerMoveThread = new PlayerMoveThread(leftDeck, rightDeck);
         } catch (IOException e) {
-            // Handling the exception 
             fail("IOException occurred while setting up test: " + e.getMessage());
         }
     }
 
     // Clearing all cards in decks and hand of player before each test case
-    @BeforeEach
-    void resetPlayerState() {
-    
+    @Before
+    public void resetPlayerState() {
         Deck leftDeck = playerMoveThread.getLeftDeck();
         Deck rightDeck = playerMoveThread.getRightDeck();
-        leftDeck.clearDeck();  
+        leftDeck.clearDeck();
         rightDeck.clearDeck();
         playerMoveThread.clearHand();
     }
 
     // After finishing all test cases deletes the txt file created for the player created
-    @AfterAll
-    void deleteFiles() {
+    @AfterClass
+    public static void deleteFiles() {
         playerMoveThread.deletePlayerFile("player1_output.txt");
         playerMoveThread.deletePlayerFile("player5_output.txt");
+        playerMoveThread.deletePlayerFile("player10_output.txt");
         Deck leftDeck = playerMoveThread.getLeftDeck();
         leftDeck.deleteDeckFile("deck11_output.txt");
         Deck rightDeck = playerMoveThread.getRightDeck();
         rightDeck.deleteDeckFile("deck12_output.txt");
-        
     }
 
-
     @Test
-    void testDoBoth() throws IOException {
-        
+    public void testDoBoth() throws IOException {
         Deck leftDeck = playerMoveThread.getLeftDeck();
         Deck rightDeck = playerMoveThread.getRightDeck();
         Card card1 = new Card(9);
-        leftDeck.addCard(card1); 
+        leftDeck.addCard(card1);
         Card card2 = new Card(11);
         playerMoveThread.addCardToHand(card2);
         playerMoveThread.doBoth(1);
 
         // Assert that a card was drawn from the left deck
-        assertEquals(0, leftDeck.getSize(), "A card should be removed from the left deck");
+        assertEquals(0, leftDeck.getSize());
 
         // Assert that a card was discarded to the right deck
-        assertEquals(1, rightDeck.getSize(), "A card should be added to the right deck");
+        assertEquals(1, rightDeck.getSize());
 
         // Assert that the output file contains the expected log
         File outputFile = new File("player1_output.txt");
-        assertTrue(outputFile.exists(), "Output file should exist");
+        assertTrue(outputFile.exists());
 
         // Verify the content of the output file
         try (BufferedReader reader = new BufferedReader(new FileReader(outputFile))) {
             String line1 = reader.readLine();
             String line2 = reader.readLine();
 
-            assertNotNull(line1, "First log entry should not be null");
-            assertTrue(line1.contains("draws a"), "First log entry should contain draw action");
+            assertNotNull(line1);
+            assertTrue(line1.contains("draws a"));
 
-            assertNotNull(line2, "Second log entry should not be null");
-            assertTrue(line2.contains("discards a"), "Second log entry should contain discard action");
+            assertNotNull(line2);
+            assertTrue(line2.contains("discards a"));
         }
     }
 
     @Test
-    void testDrawCard1() {
-        
-        Card card = new Card(1);  
+    public void testDrawCard1() {
+        Card card = new Card(1);
         Deck leftDeck = playerMoveThread.getLeftDeck();
-        
-        leftDeck.addCard(card);  
-        playerMoveThread.drawCard();  
+
+        leftDeck.addCard(card);
+        playerMoveThread.drawCard();
 
         // Ensure the card is added to the player's hand
         assertEquals(1, playerMoveThread.getCardValues()[0]);
     }
 
     @Test
-    void testDrawCard2() {
-    
+    public void testDrawCard2() {
         Card card = new Card(1);
         Card card2 = new Card(2);
         Deck leftDeck = playerMoveThread.getLeftDeck();
-        
-        leftDeck.addCard(card);  
+
+        leftDeck.addCard(card);
         leftDeck.addCard(card2);
-        playerMoveThread.drawCard();  
         playerMoveThread.drawCard();
+        playerMoveThread.drawCard();
+
         // Ensure the card is added to the player's hand
         assertNotEquals(2, playerMoveThread.getCardValues()[0]);
         assertEquals(2, playerMoveThread.getCardValues()[1]);
     }
 
-    
-
     @Test
-    void testDiscardCard1() {
-    
+    public void testDiscardCard1() {
         Card card1 = new Card(7);
-        playerMoveThread.addCardToHand(card1);  
+        playerMoveThread.addCardToHand(card1);
         playerMoveThread.discardCard();
+        Deck rightDeck = playerMoveThread.getRightDeck();
 
-        assertEquals(0, playerMoveThread.getCardValues()[0]);  // Hand should be empty now
+        assertEquals(1, rightDeck.getSize());
+        assertEquals(0, playerMoveThread.getCardValues()[0]);
     }
 
     @Test
-    void testDiscardCard2() {
-        
+    public void testDiscardCard2() {
         Card card1 = new Card(7);
         Card card2 = new Card(8);
 
-        playerMoveThread.addCardToHand(card1); 
+        playerMoveThread.addCardToHand(card1);
         playerMoveThread.addCardToHand(card2);
         playerMoveThread.discardCard();
 
-        assertEquals(8, playerMoveThread.getCardValues()[0]);  // Hand should have card with value 8
+        assertEquals(8, playerMoveThread.getCardValues()[0]);
         assertNotEquals(7, playerMoveThread.getCardValues()[0]);
     }
 
+    @Test
+    public void testDiscardCard3() {
+        Card card1 = new Card(7);
+        Card card2 = new Card(8);
+        Deck rightDeck = playerMoveThread.getRightDeck();
+
+        playerMoveThread.addCardToHand(card1);
+        playerMoveThread.addCardToHand(card2);
+        playerMoveThread.discardCard();
+        playerMoveThread.discardCard();
+
+        assertEquals(2, rightDeck.getSize());
+        assertEquals(0, playerMoveThread.getCardValues()[0]);
+    }
 
     @Test
-    void testaddCardtoHand() {
+    public void testAddCardToHand() {
         Card card1 = new Card(2);
         Card card2 = new Card(2);
         Card card3 = new Card(3);
         Card card4 = new Card(4);
-        playerMoveThread.addCardToHand(card1);  // Add cards to the hand
+        playerMoveThread.addCardToHand(card1);
         playerMoveThread.addCardToHand(card2);
         playerMoveThread.addCardToHand(card3);
         playerMoveThread.addCardToHand(card4);
-        // Get the first three card values
         int[] handSlice = Arrays.copyOfRange(playerMoveThread.getCardValues(), 0, 3);
 
-        // Assert the sliced array
-        assertArrayEquals(new int[]{2, 2, 3}, handSlice, "The first three cards should be correct."); 
-        assertFalse(Arrays.equals(new int[]{2, 2, 4}, handSlice), "The first three cards should not be correct"); 
+        assertArrayEquals(new int[]{2, 2, 3}, handSlice);
+        assertFalse(Arrays.equals(new int[]{2, 2, 4}, handSlice));
     }
 
     @Test
-    void testWinningHand() {
-    
+    public void testWinningHand() {
         Card card1 = new Card(2);
         Card card2 = new Card(2);
         Card card3 = new Card(2);
         Card card4 = new Card(2);
 
-        playerMoveThread.addCardToHand(card1);  
+        playerMoveThread.addCardToHand(card1);
         playerMoveThread.addCardToHand(card2);
         playerMoveThread.addCardToHand(card3);
         playerMoveThread.addCardToHand(card4);
 
-
-        // Check if the player has a winning hand
         assertTrue(playerMoveThread.isWinningHand());
     }
 
     @Test
-    void testNotWinningHand1() {
-
+    public void testNotWinningHand1() {
         Card card1 = new Card(2);
         Card card2 = new Card(2);
         Card card3 = new Card(-2);
         Card card4 = new Card(2);
 
-        playerMoveThread.addCardToHand(card1); 
+        playerMoveThread.addCardToHand(card1);
         playerMoveThread.addCardToHand(card2);
         playerMoveThread.addCardToHand(card3);
         playerMoveThread.addCardToHand(card4);
 
-
-        // Check if the player has a winning hand
         assertFalse(playerMoveThread.isWinningHand());
     }
 
     @Test
-    void testNotWinningHand2() {
-
+    public void testNotWinningHand2() {
         Card card1 = new Card(2);
         Card card2 = new Card(1);
         Card card3 = new Card(2);
         Card card4 = new Card(3);
 
-        playerMoveThread.addCardToHand(card1); 
+        playerMoveThread.addCardToHand(card1);
         playerMoveThread.addCardToHand(card2);
         playerMoveThread.addCardToHand(card3);
         playerMoveThread.addCardToHand(card4);
 
-        // Check if the player does not have a winning hand
         assertFalse(playerMoveThread.isWinningHand());
     }
-
-
-
 }

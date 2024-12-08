@@ -16,7 +16,7 @@ public class CardGame {
                 if (numberOfPlayers < 2) {
                     throw new IllegalArgumentException("There must be at least 2 players.");
                 }
-                System.out.print("Enter the path to the pack.txt file: ");
+                System.out.print("Enter the path to the pack.txt file without quotation marks: ");
                 filePath = scanner.nextLine();
                 File file = new File(filePath);
                 if (!file.exists() || !file.canRead()) {

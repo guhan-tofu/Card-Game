@@ -1,30 +1,32 @@
-import org.junit.jupiter.api.*;
+import org.junit.BeforeClass;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.*;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class CardImplTest {
 
-    private CardImplementor cardImplementor;
-    private final int numOfPlayers = 4;
-    private PlayerMoveThread playerMoveThread;
+    private static CardImplementor cardImplementor;
+    private static final int numOfPlayers = 4;
+    private static PlayerMoveThread playerMoveThread;
 
     // Create 4 players before starting all test cases
-    @BeforeAll
-    void setUp() {
+    @BeforeClass
+    public static void setUp() {
         cardImplementor = new CardImplementor();
         cardImplementor.createPlayers(numOfPlayers);
         playerMoveThread = CardImplementor.myPlayers.get(1);
     }
 
     // Delete all player and deck files created after all test cases
-    @AfterAll
-    void deleteFiles() {
+    @AfterClass
+    public static void deleteFiles() {
         playerMoveThread.deletePlayerFile("player1_output.txt");
         playerMoveThread.deletePlayerFile("player2_output.txt");
         playerMoveThread.deletePlayerFile("player3_output.txt");
@@ -34,6 +36,7 @@ public class CardImplTest {
         playerMoveThread.deletePlayerFile("player7_output.txt");
         playerMoveThread.deletePlayerFile("player8_output.txt");
         playerMoveThread.deletePlayerFile("player9_output.txt");
+        playerMoveThread.deletePlayerFile("player10_output.txt");
         
         Deck leftDeck = playerMoveThread.getLeftDeck();
         leftDeck.deleteDeckFile("deck1_output.txt");
@@ -43,35 +46,30 @@ public class CardImplTest {
         leftDeck1.deleteDeckFile("deck3_output.txt");
         Deck rightDeck1 = playerMoveThread.getRightDeck();
         rightDeck1.deleteDeckFile("deck4_output.txt");
-
-        
-    }
-
-
-    @Test
-    void testCreatePlayers() {
-        assertEquals(numOfPlayers, CardImplementor.myDecks.size(), "Number of decks should match number of players.");
-        assertEquals(numOfPlayers, CardImplementor.myPlayers.size(), "Number of players should match input.");
     }
 
     @Test
-    void testShowPlayerDetails1() {
-        
+    public void testCreatePlayers() {
+        assertEquals("Number of decks should match number of players.", numOfPlayers, CardImplementor.myDecks.size());
+        assertEquals("Number of players should match input.", numOfPlayers, CardImplementor.myPlayers.size());
+    }
+
+    @Test
+    public void testShowPlayerDetails1() {
         String playerDetails = cardImplementor.showPlayerDetails(0);
-        assertNotNull(playerDetails, "Player details should not be null.");
-        assertTrue(playerDetails.contains("Left deck:"), "Player details should include left deck info.");
-        assertTrue(playerDetails.contains("Right deck:"), "Player details should include right deck info.");
+        assertNotNull("Player details should not be null.", playerDetails);
+        assertTrue("Player details should include left deck info.", playerDetails.contains("Left deck:"));
+        assertTrue("Player details should include right deck info.", playerDetails.contains("Right deck:"));
     }
 
     @Test
-    void testShowPlayerDetails2() {
-    
+    public void testShowPlayerDetails2() {
         String playerDetails = cardImplementor.showPlayerDetails(0);
-        assertNotNull(playerDetails, "Player details should not be null.");
+        assertNotNull("Player details should not be null.", playerDetails);
     }
 
     @Test
-    void testLoadCardsFromFile() throws IOException {
+    public void testLoadCardsFromFile() throws IOException {
         // Create a temporary file with valid card values
         Path tempFile = Files.createTempFile("cards", ".txt");
         List<String> cardValues = List.of(
@@ -94,75 +92,86 @@ public class CardImplTest {
 
         // Assert
         List<Card> myCards = cardImplementor.getMyCards();
-        assertEquals(8 * numOfPlayers, myCards.size(), "Loaded card count should match expected count.");
+        assertEquals("Loaded card count should match expected count.", 8 * numOfPlayers, myCards.size());
     }
 
     @Test
-    void testShowCardValues() {
-        
+    public void testShowCardValues() {
         String tempCardFile = createTempCardFile();
 
         // Act & Assert
-        assertDoesNotThrow(() -> cardImplementor.loadCardsFromFile(tempCardFile, numOfPlayers),
-            "LoadCardsFromFile should not throw any exceptions.");
-        assertDoesNotThrow(() -> cardImplementor.showCardValues(),
-            "ShowCardValues should not throw any exceptions.");
+        try {
+            cardImplementor.loadCardsFromFile(tempCardFile, numOfPlayers);
+            cardImplementor.showCardValues();
+        } catch (Exception e) {
+            fail("LoadCardsFromFile or ShowCardValues should not throw any exceptions.");
+        }
     }
 
     @Test
-    void testDistributeToPlayers() {
-        
+    public void testDistributeToPlayers() {
         cardImplementor.loadCardsFromFile(createTempCardFile(), numOfPlayers);
         cardImplementor.distributeToPlayers(numOfPlayers);
 
         for (PlayerMoveThread player : CardImplementor.myPlayers) {
-            assertEquals(4, player.getCardValues().length, "Each player should have 4 cards in hand.");
+            assertEquals("Each player should have 4 cards in hand.", 4, player.getCardValues().length);
         }
     }
 
     @Test
-    void testDistributeToDecks() {
-       
+    public void testDistributeToDecks() {
         cardImplementor.loadCardsFromFile(createTempCardFile(), numOfPlayers);
         cardImplementor.distributeToDecks(numOfPlayers);
 
         for (Deck deck : CardImplementor.myDecks) {
-            assertEquals(4, deck.getSize(), "Each deck should have 4 cards.");
+            assertEquals("Each deck should have 4 cards.", 4, deck.getSize());
         }
     }
 
     @Test
-    void testShowCardsInDeck1() {
-      
+    public void testShowCardsInDeck1() {
         cardImplementor.loadCardsFromFile(createTempCardFile(), numOfPlayers);
         cardImplementor.distributeToDecks(numOfPlayers);
-        assertDoesNotThrow(() -> cardImplementor.showCardsInDeck(0), "showCardsInDeck should not throw any exceptions.");
+        try {
+            cardImplementor.showCardsInDeck(0);
+        } catch (Exception e) {
+            fail("showCardsInDeck should not throw any exceptions.");
+        }
     }
 
     @Test
-    void testShowCardsInDeck2() {
-        
+    public void testShowCardsInDeck2() {
         cardImplementor.loadCardsFromFile(createTempCardFile(), numOfPlayers);
         cardImplementor.distributeToDecks(numOfPlayers);
-        assertDoesNotThrow(() -> cardImplementor.showCardsInDeck(5), "should handle invalid deck IDs.");
-        assertDoesNotThrow(() -> cardImplementor.showCardsInDeck(-1), "should handle negative deck IDs.");
-    }   
-
-    @Test
-    void testShowCardsInHand1() {
-        
-        cardImplementor.loadCardsFromFile(createTempCardFile(), numOfPlayers);
-        cardImplementor.distributeToPlayers(numOfPlayers);
-        assertDoesNotThrow(() -> cardImplementor.showCardsInHand(0), "showCardsInHand should not throw any exceptions.");
+        try {
+            cardImplementor.showCardsInDeck(5);
+            cardImplementor.showCardsInDeck(-1);
+        } catch (Exception e) {
+            fail("should handle invalid deck IDs.");
+        }
     }
 
     @Test
-    void testShowCardsInHand2() {
-        
+    public void testShowCardsInHand1() {
         cardImplementor.loadCardsFromFile(createTempCardFile(), numOfPlayers);
         cardImplementor.distributeToPlayers(numOfPlayers);
-        assertDoesNotThrow(() -> cardImplementor.showCardsInHand(7), "should handle invalid deck IDs.");
-        assertDoesNotThrow(() -> cardImplementor.showCardsInHand(-4), "should handle negative deck IDs.");
+        try {
+            cardImplementor.showCardsInHand(0);
+        } catch (Exception e) {
+            fail("showCardsInHand should not throw any exceptions.");
+        }
+    }
+
+    @Test
+    public void testShowCardsInHand2() {
+        cardImplementor.loadCardsFromFile(createTempCardFile(), numOfPlayers);
+        cardImplementor.distributeToPlayers(numOfPlayers);
+        try {
+            cardImplementor.showCardsInHand(7);
+            cardImplementor.showCardsInHand(-4);
+        } catch (Exception e) {
+            fail("should handle negative deck IDs.");
+        }
     }
 
     private String createTempCardFile() {

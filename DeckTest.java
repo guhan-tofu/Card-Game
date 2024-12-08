@@ -1,46 +1,51 @@
-import static org.junit.jupiter.api.Assertions.*;
-import org.junit.jupiter.api.*;
+
+import static org.junit.Assert.*;
+
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.AfterClass;
+import org.junit.Test;
 
 import java.io.*;
 import java.util.List;
 import java.util.ArrayList;
 
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class DeckTest {
 
     private Deck deck;
 
+    // Make a new Deck for test cases - runs once before all tests
+    @BeforeClass
+    public static void setUpBeforeClass() {
+        // No need for setup at class level in this case, but could be added here if needed
+    }
 
-    // Make a new Deck for test cases
-    @BeforeAll
-    void setUp() {
+    // Clear the deck before every test case
+    @Before
+    public void resetDeck() {
         int deckId = 1;
         deck = new Deck(deckId);
-    }
-
-    @AfterAll
-    void deleteFiles() {
-        deck.deleteDeckFile("deck2_output.txt");
-    }
-
-    // Clear the deck before every test cases
-    @BeforeEach
-    void resetUp() {
         deck.clearDeck();
-        Card.resetCardCounter();
+    }
+
+    // Delete files after all tests are finished
+    @AfterClass
+    public static void deleteFiles() {
+        Deck deck = new Deck(1);  // Assuming static method, otherwise create deck object if needed
+        deck.deleteDeckFile("deck2_output.txt");
     }
 
     @Test
     public void testDeckFileCreation() {
         int deckId = 1;
-        File deckFile = new File("deck"+(deckId+1) + "_output.txt");
+        File deckFile = new File("deck" + (deckId + 1) + "_output.txt");
 
-        assertTrue(deckFile.exists(), "Deck file should be created.");
-        assertTrue(deckFile.delete(), "Deck file should be deleted after test.");
+        assertTrue("Deck file should be created.", deckFile.exists());
+        assertTrue("Deck file should be deleted after test.", deckFile.delete());
     }
 
     @Test
-    public void testAddCardAndSize() {
+    public void testAddCardAndSize1() {
 
         Card card1 = new Card(10);
         Card card2 = new Card(20);
@@ -48,12 +53,29 @@ public class DeckTest {
         deck.addCard(card1);
         deck.addCard(card2);
 
-        assertEquals(2, deck.getSize(), "Deck size should be 2 after adding two cards.");
-        assertNotEquals(3, deck.getSize(), "Deck size should be 2 after adding two cards.");
+        assertEquals("Deck size should be 2 after adding two cards.", 2, deck.getSize());
+        assertNotEquals("Deck size should not be 3 after adding two cards.", 3, deck.getSize());
     }
 
     @Test
-    public void testDrawCard() {
+    public void testAddCardAndSize2() {
+
+        Card card1 = new Card(10);
+        Card card2 = new Card(20);
+        Card card3 = new Card(30);
+        Card card4 = new Card(40);
+
+        deck.addCard(card1);
+        deck.addCard(card2);
+        deck.addCard(card3);
+        deck.addCard(card4);
+
+        assertEquals("Deck size should be 4 after adding four cards.", 4, deck.getSize());
+        assertNotEquals("Deck size should not be 2 after adding four cards.", 2, deck.getSize());
+    }
+
+    @Test
+    public void testDrawCard1() {
 
         Card card1 = new Card(10);
         Card card2 = new Card(20);
@@ -62,9 +84,29 @@ public class DeckTest {
         deck.addCard(card2);
 
         Card drawnCard = deck.drawCard();
-        assertNotNull(drawnCard, "Drawn card should not be null.");
-        assertEquals(10, drawnCard.getValue(), "The value of the drawn card should match the first added card.");
-        assertEquals(1, deck.getSize(), "Deck size should be 1 after drawing a card.");
+        assertNotNull("Drawn card should not be null.", drawnCard);
+        assertEquals("The value of the drawn card should match the first added card.", 10, drawnCard.getValue());
+        assertEquals("Deck size should be 1 after drawing a card.", 1, deck.getSize());
+    }
+
+    @Test
+    public void testDrawCard2() {
+
+        Card card1 = new Card(10);
+        Card card2 = new Card(20);
+        Card card3 = new Card(30);
+        Card card4 = new Card(40);
+
+        deck.addCard(card1);
+        deck.addCard(card2);
+        deck.addCard(card3);
+        deck.addCard(card4);
+
+        deck.drawCard();
+        Card drawnCard2 = deck.drawCard();
+        assertNotNull("Drawn card should not be null.", drawnCard2);
+        assertEquals("The value of the drawn card should match the second added card.", 20, drawnCard2.getValue());
+        assertEquals("Deck size should be 2 after drawing a card.", 2, deck.getSize());
     }
 
     @Test
@@ -79,8 +121,8 @@ public class DeckTest {
 
         deck.writeAllCardsToFile();
 
-        File deckFile = new File("deck"+(deckId+1) + "_output.txt");
-        assertTrue(deckFile.exists(), "Deck file should exist after writing.");
+        File deckFile = new File("deck" + (deckId + 1) + "_output.txt");
+        assertTrue("Deck file should exist after writing.", deckFile.exists());
 
         // Read the file and verify its content
         List<String> lines = new ArrayList<>();
@@ -91,15 +133,16 @@ public class DeckTest {
             }
         }
 
-        assertFalse(lines.isEmpty(), "Deck file should not be empty.");
-        assertTrue(lines.get(0).contains("10") && lines.get(0).contains("20"),
-                "Deck file should contain the values of the added cards.");
-
+        assertFalse("Deck file should not be empty.", lines.isEmpty());
+        assertTrue("Deck file should contain the values of the added cards.", lines.get(0).contains("10") && lines.get(0).contains("20"));
     }
 
     @Test
     public void testShowCards() {
-        
+
+        // Reset card counter to ensure IDs start from 0
+        Card.resetCardCounter();
+
         Card card1 = new Card(10);
         Card card2 = new Card(20);
 
@@ -115,14 +158,11 @@ public class DeckTest {
             deck.showCards();
 
             String output = outContent.toString().trim().replace("\r\n", "\n");
-            String expectedOutput = """
-                card id: 0 card value: 10
-                card id: 1 card value: 20
-                """.trim().replace("\r\n", "\n");
-            assertEquals(expectedOutput, output, "The output of showCards() does not match the expected output.");
+            String expectedOutput = "card id: 0 card value: 10\ncard id: 1 card value: 20";
+            assertEquals("The output of showCards() does not match the expected output.", expectedOutput, output);
         } finally {
-
             System.setOut(originalOut);
         }
-    }
+}
+
 }

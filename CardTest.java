@@ -1,15 +1,15 @@
 
 
+import static org.junit.Assert.*;
 
-import static org.junit.jupiter.api.Assertions.*;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
 
 public class CardTest {
 
     // Reset the idCounter to 0 before each test to ensure consistent behavior.
-    @BeforeEach
-    void resetIdCounter() {
+    @Before
+    public void resetIdCounter() {
         try {
             var field = Card.class.getDeclaredField("idCounter");
             field.setAccessible(true);
@@ -20,46 +20,46 @@ public class CardTest {
     }
 
     @Test
-    void testConstructor() {
+    public void testConstructor() {
         Card card = new Card(10);
-        assertEquals(10, card.getValue(), "Card value should match the value provided to the constructor.");
-        assertEquals(0, card.getId(), "Card ID should start at 0 for the first instance.");
+        assertEquals("Card value should match the value provided to the constructor.", 10, card.getValue());
+        assertEquals("Card ID should start at 0 for the first instance.", 0, card.getId());
     }
 
     @Test
-    void testGetValue() {
+    public void testGetValue() {
         Card card = new Card(5);
-        assertEquals(5, card.getValue(), "getValue() should return the correct card value.");
+        assertEquals("getValue() should return the correct card value.", 5, card.getValue());
     }
 
     @Test
-    void testDontGetValue() {
+    public void testDontGetValue() {
         Card card = new Card(5);
-        assertNotEquals(6, card.getValue(), "getValue() should not return the correct card value.");
+        assertNotEquals("getValue() should not return the incorrect card value.", 6, card.getValue());
     }
 
     @Test
-    void testGetId() {
+    public void testGetId() {
         Card card1 = new Card(3);
         Card card2 = new Card(7);
-        assertEquals(0, card1.getId(), "First card ID should be 0.");
-        assertEquals(1, card2.getId(), "Second card ID should be 1.");
+        assertEquals("First card ID should be 0.", 0, card1.getId());
+        assertEquals("Second card ID should be 1.", 1, card2.getId());
     }
 
     @Test
-    void testToString() {
+    public void testToString() {
         Card card = new Card(42);
-        assertEquals("42", card.toString(), "toString() should return the string representation of the card value.");
+        assertEquals("toString() should return the string representation of the card value.", "42", card.toString());
     }
 
     @Test
-    void testUniqueIds() {
+    public void testUniqueIds() {
         Card card1 = new Card(10);
         Card card2 = new Card(20);
         Card card3 = new Card(30);
 
-        assertNotEquals(card1.getId(), card2.getId(), "Each card should have a unique ID.");
-        assertNotEquals(card2.getId(), card3.getId(), "Each card should have a unique ID.");
-        assertNotEquals(card1.getId(), card3.getId(), "Each card should have a unique ID.");
+        assertNotEquals("Each card should have a unique ID.", card1.getId(), card2.getId());
+        assertNotEquals("Each card should have a unique ID.", card2.getId(), card3.getId());
+        assertNotEquals("Each card should have a unique ID.", card1.getId(), card3.getId());
     }
 }
