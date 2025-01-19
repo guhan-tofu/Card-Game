@@ -23,3 +23,8 @@ Windows :
 
 macOS/Linux :
 `java -cp "lib/*:." org.junit.runner.JUnitCore TestSuite`
+
+## Details
+
+* **Authors:** Sri Guhanthan [Linkedin](https://www.linkedin.com/in/sri-guhan/) , Ernest Bozjigtov [Linkedin](https://www.linkedin.com/in/ernest-bozjigitov/)
+* **License:** This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
